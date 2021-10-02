@@ -6,6 +6,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tiled.TiledMap;
 
 
 /**
@@ -19,11 +20,12 @@ import org.newdawn.slick.state.StateBasedGame;
  * Transitions To GameOverState
  */
 class PlayingState extends BasicGameState {
-	private int livesRemaining;
+	private TiledMap map;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
+		map = new TiledMap("Game/src/Inflater/Resources/Maps/Level1/Level1.tmx");
 	}
 
 	@Override
@@ -35,6 +37,9 @@ class PlayingState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		InflaterGame bg = (InflaterGame)game;
+		g.scale(0.6f, 0.6f);
+		map.render(0,0);
+
 
 	}
 

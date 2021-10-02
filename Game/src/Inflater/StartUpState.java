@@ -3,6 +3,7 @@ package Inflater;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tiled.TiledMap;
 
 /**
  * This state is active prior to the Game starting. In this state, sound is
@@ -15,7 +16,7 @@ import org.newdawn.slick.state.StateBasedGame;
  * Transitions To PlayingState
  */
 class StartUpState extends BasicGameState {
-
+	private TiledMap map;
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
@@ -31,7 +32,6 @@ class StartUpState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-
 
 	}
 
