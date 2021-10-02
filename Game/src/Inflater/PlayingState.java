@@ -21,9 +21,9 @@ import org.newdawn.slick.tiled.TiledMap;
  */
 class PlayingState extends BasicGameState {
 	private TiledMap map;
-	private int tWidth = 20;
-	private int theight = 15;
-	private int[][] Tmap = new int[theight][tWidth];
+	private final int tWidth = 20;
+	private final int tHeight = 15;
+	private int[][] Tmap = new int[tHeight][tWidth];
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -32,24 +32,24 @@ class PlayingState extends BasicGameState {
 		map = new TiledMap("Game/src/Inflater/Resources/Maps/Level1/Level1.tmx");
 
 
-
 		int walls = map.getLayerIndex("Walls");
-		for(int y =0; y < theight; y++) {
+		for(int y =0; y < tHeight; y++) {
 			for(int x =0; x < tWidth; x++) {
 				Tmap[y][x] = map.getTileId(x,y, walls);
 			}
-		}
-		for(int y =0; y < theight; y++) {
-			System.out.println("LAYER: " + y);
-			for(int x =0; x < tWidth; x++) {
-				System.out.print(Tmap[y][x]+ " ");
-			}
-			System.out.println();
 		}
 	}
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
+		//Printing out 2d array of map
+//		for(int y =0; y < tHeight; y++) {
+//			System.out.println("LAYER: " + y);
+//			for(int x =0; x < tWidth; x++) {
+//				System.out.print(Tmap[y][x]+ " ");
+//			}
+//			System.out.println();
+//		}
 
 		container.setSoundOn(true);
 	}
