@@ -1,0 +1,11 @@
+  ====  [] Closed Issues []  ====
+
+
+
+
+
+  ====  [] Open Issues []  ====
+
+[1] Implement a simple collidable 2d for testing purposes.
+[2] Add a character for the player to control.
+[3] Add collision for character and the tile map.
