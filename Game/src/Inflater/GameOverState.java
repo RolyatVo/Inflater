@@ -22,7 +22,6 @@ class GameOverState extends BasicGameState {
 	
 
 	private int timer;
-	private int lastKnownBounces; // the user's score, to be displayed, but not updated.
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -34,10 +33,6 @@ class GameOverState extends BasicGameState {
 		timer = 4000;
 	}
 
-	public void setUserScore(int bounces) {
-		lastKnownBounces = bounces;
-	}
-	
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {

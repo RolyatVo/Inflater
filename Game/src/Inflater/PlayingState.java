@@ -21,11 +21,31 @@ import org.newdawn.slick.tiled.TiledMap;
  */
 class PlayingState extends BasicGameState {
 	private TiledMap map;
+	private int tWidth = 20;
+	private int theight = 15;
+	private int[][] Tmap = new int[theight][tWidth];
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
+		InflaterGame ig = (InflaterGame)game;
 		map = new TiledMap("Game/src/Inflater/Resources/Maps/Level1/Level1.tmx");
+
+
+
+		int walls = map.getLayerIndex("Walls");
+		for(int y =0; y < theight; y++) {
+			for(int x =0; x < tWidth; x++) {
+				Tmap[y][x] = map.getTileId(x,y, walls);
+			}
+		}
+		for(int y =0; y < theight; y++) {
+			System.out.println("LAYER: " + y);
+			for(int x =0; x < tWidth; x++) {
+				System.out.print(Tmap[y][x]+ " ");
+			}
+			System.out.println();
+		}
 	}
 
 	@Override
