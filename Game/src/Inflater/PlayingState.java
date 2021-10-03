@@ -1,5 +1,6 @@
 package Inflater;
 
+import jig.Vector;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -24,11 +25,14 @@ class PlayingState extends BasicGameState {
 	private final int tWidth = 20;
 	private final int tHeight = 15;
 	private int[][] Tmap = new int[tHeight][tWidth];
+
+	private float PLAYER_SPEED = 0.25f;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		InflaterGame ig = (InflaterGame)game;
+
 		map = new TiledMap("Game/src/Inflater/Resources/Maps/Level1/Level1.tmx");
 
 
@@ -56,9 +60,12 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
-		InflaterGame bg = (InflaterGame)game;
+		InflaterGame ig = (InflaterGame)game;
 		g.scale(0.6f, 0.6f);
 		map.render(0,0);
+		ig.runner.render(g);
+		ig.runner.setScale(4.0f);
+		g.drawString(ig.runner.getVelocity().toString(), 100, 100);
 
 
 	}
@@ -68,8 +75,26 @@ class PlayingState extends BasicGameState {
 			int delta) throws SlickException {
 
 		Input input = container.getInput();
-		InflaterGame bg = (InflaterGame) game;
+		InflaterGame ig = (InflaterGame) game;
 
+		if(input.isKeyDown(Input.KEY_S)) {
+			ig.runner.setVelocity(new Vector(0, PLAYER_SPEED));
+		}
+		else if(input.isKeyDown(Input.KEY_W)) {
+			ig.runner.setVelocity(new Vector (0, -PLAYER_SPEED ));
+		}
+		else if (input.isKeyDown(Input.KEY_D)){
+			ig.runner.setVelocity(new Vector (PLAYER_SPEED, 0 ));
+		}
+		else if (input.isKeyDown(Input.KEY_A)){
+			ig.runner.setVelocity(new Vector (-PLAYER_SPEED, 0 ));
+}
+		else {
+			ig.runner.setVelocity(new Vector(0,0));
+		}
+		System.out.println(ig.runner.getVelocity().toString());
+
+		ig.runner.update(delta);
 	}
 
 	@Override

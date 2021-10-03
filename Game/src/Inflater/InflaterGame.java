@@ -2,10 +2,11 @@ package Inflater;
 
 import jig.Entity;
 
-import org.newdawn.slick.AppGameContainer;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.SlickException;
+import jig.ResourceManager;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
+
+import javax.annotation.Resource;
 
 /**
  *
@@ -25,12 +26,13 @@ public class InflaterGame extends StateBasedGame {
 	public static final int GAMEOVERSTATE = -1;
 
 
-	
-	public static final String BALL_BALLIMG_RSC = "bounce/resource/ball.png";
 
+	//public static final String PLAYER_RSC = "Inflater/Resources/Sprites/testplayer.png";
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
+
+	Runner runner;
 
 
 	/**
@@ -72,10 +74,12 @@ public class InflaterGame extends StateBasedGame {
 		// attempt to do in the startUp() method.
 		//ResourceManager.loadSound(BANG_EXPLOSIONSND_RSC);
 
+
 		// preload all the resources to avoid warnings & minimize latency...
 		//ResourceManager.loadImage(BALL_BALLIMG_RSC);
+		//ResourceManager.loadImage(PLAYER_RSC);
 
-
+		runner = new Runner(ScreenWidth / 2, ScreenHeight / 2, .1f, .2f);
 	}
 	
 	public static void main(String[] args) {
