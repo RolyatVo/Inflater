@@ -24,7 +24,10 @@ class PlayingState extends BasicGameState {
 	private TiledMap map;
 	private final int tWidth = 20;
 	private final int tHeight = 15;
+	private final int pHeight = 960;
+	private final int pWidth = 1280;
 	private int[][] Tmap = new int[tHeight][tWidth];
+	private boolean DEBUG_FLAG= false;
 
 	private float PLAYER_SPEED = 0.25f;
 	
@@ -61,8 +64,16 @@ class PlayingState extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
 		InflaterGame ig = (InflaterGame)game;
+
 		g.scale(0.6f, 0.6f);
 		map.render(0,0);
+		if(DEBUG_FLAG) {
+			for (int i = 1; i < tWidth; i++)
+				g.drawLine(map.getTileWidth() * i, 0, map.getTileWidth() * i, pHeight);
+			for (int i = 1; i < tHeight; i++)
+				g.drawLine(0, map.getTileHeight() * i, pWidth, map.getTileHeight() * i);
+
+		}
 		ig.runner.render(g);
 		ig.runner.setScale(4.0f);
 		g.drawString(ig.runner.getVelocity().toString(), 100, 100);
@@ -92,8 +103,9 @@ class PlayingState extends BasicGameState {
 		else {
 			ig.runner.setVelocity(new Vector(0,0));
 		}
-		System.out.println(ig.runner.getVelocity().toString());
 
+		if(input.isKeyPressed(Input.KEY_P))
+			DEBUG_FLAG = !DEBUG_FLAG;
 		ig.runner.update(delta);
 	}
 

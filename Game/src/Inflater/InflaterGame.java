@@ -79,7 +79,7 @@ public class InflaterGame extends StateBasedGame {
 		//ResourceManager.loadImage(BALL_BALLIMG_RSC);
 		//ResourceManager.loadImage(PLAYER_RSC);
 
-		runner = new Runner(ScreenWidth / 2, ScreenHeight / 2, .1f, .2f);
+		runner = new Runner(2*64-32, 14*64-32, 0f, 0f);
 	}
 	
 	public static void main(String[] args) {
