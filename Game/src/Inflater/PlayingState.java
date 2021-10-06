@@ -89,10 +89,10 @@ class PlayingState extends BasicGameState {
 		InflaterGame ig = (InflaterGame) game;
 
 
-		if(input.isKeyDown(Input.KEY_DOWN)) {
+		if(input.isKeyDown(Input.KEY_DOWN) && ig.runner.isOnLadder(Tmap) && ig.runner.getCoarseGrainedMaxY() < 14*64) {
 			ig.runner.setVelocity(new Vector(0, PLAYER_SPEED));
 		}
-		else if(input.isKeyDown(Input.KEY_UP)) {
+		else if(input.isKeyDown(Input.KEY_UP) && ig.runner.isOnLadder(Tmap)) {
 			ig.runner.setVelocity(new Vector (0, -PLAYER_SPEED ));
 		}
 		else if (input.isKeyDown(Input.KEY_RIGHT)){

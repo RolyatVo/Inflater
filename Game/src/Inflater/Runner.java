@@ -92,6 +92,17 @@ class Runner extends Entity {
 
         return false;
     }
+    public boolean isOnLadder(int [][] tmap) {
+        int playerY = (int) getTilePosition(64,64).getY();
+        int playerX = (int) getTilePosition(64,64).getX();
+        if(playerY+1 < 15) {
+            if (tmap[playerY][playerX] == 71 || tmap[playerY][playerX] == 73 ||
+                    tmap[playerY + 1][playerX] == 71 || tmap[playerY + 1][playerX] == 73)
+                return true;
+        }
+        return false;
+    }
+
     /**
      *
      *
