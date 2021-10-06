@@ -16,7 +16,10 @@ import org.newdawn.slick.SpriteSheet;
  */
 class Runner extends Entity {
     private Image runguy = new SpriteSheet("Inflater/Resources/Sprites/loderunner.png", 16, 16);
+    private Image runLEFT = runguy.getSubImage(0,0,16,16);
+    private Image runRIGHT = runLEFT.getFlippedCopy(true, false);
     private Vector velocity, initalV;
+    private String direction;
     private int countdown;
     private int timer;
     public Runner(final float x, final float y, final float vx, final float vy) throws SlickException {
@@ -25,10 +28,11 @@ class Runner extends Entity {
 //        addImageWithBoundingBox(ResourceManager
 //                .getImage(InflaterGame.PLAYER_RSC));
 
-        addImageWithBoundingBox(runguy.getSubImage(0,0,16,16));
+        addImageWithBoundingBox(runLEFT);
         velocity = new Vector(vx, vy);
         initalV = velocity.copy();
         countdown = 0;
+        direction = "LEFT";
         timer = 0;
     }
 
@@ -43,8 +47,53 @@ class Runner extends Entity {
 
     public void pause(final int time) { this.timer = time; }
 
+    public String getDirection() { return direction; }
+    public void setDirection(String direction) { this.direction = direction; }
+
+    public Vector getTilePosition(float tileWidth, float tileHeight) {
+        return new Vector((int)(this.getX() / tileWidth), (int) (this.getY() / tileHeight));
+    }
+
+    public void flipDirection() {
+        flipImage();
+        if(direction == "RIGHT") {
+            setDirection("LEFT");
+        }
+        else {
+            setDirection("RIGHT");
+        }
+    }
+
+    public void flipImage() {
+        if(direction == "RIGHT") {
+            removeImage(runRIGHT);
+            addImage(runLEFT);
+        }
+        else {
+            removeImage(runLEFT);
+            addImage(runRIGHT);
+        }
+
+    }
+    public boolean isDirectionBlocked(int [][] tmap) {
+        Vector currentPosition = getTilePosition(64,64);
+
+        if(getDirection() == "RIGHT") {
+            if (tmap[(int)currentPosition.getY()][(int)currentPosition.getX()+1] != 0
+                && this.getCoarseGrainedMaxX() > 19*64)
+                    return true;
+        }
+        if(getDirection() == "LEFT") {
+            if (tmap[(int)currentPosition.getY()][(int)currentPosition.getX()-1] != 0
+                && this.getCoarseGrainedMinX() < 64)
+                    return true;
+        }
+
+
+        return false;
+    }
     /**
-     * Update the Ball based on how much time has passed...
+     *
      *
      * @param delta
      *            the number of milliseconds since the last update

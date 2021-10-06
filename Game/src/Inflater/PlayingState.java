@@ -38,7 +38,6 @@ class PlayingState extends BasicGameState {
 
 		map = new TiledMap("Game/src/Inflater/Resources/Maps/Level1/Level1.tmx");
 
-
 		int walls = map.getLayerIndex("Walls");
 		for(int y =0; y < tHeight; y++) {
 			for(int x =0; x < tWidth; x++) {
@@ -50,13 +49,13 @@ class PlayingState extends BasicGameState {
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		//Printing out 2d array of map
-//		for(int y =0; y < tHeight; y++) {
-//			System.out.println("LAYER: " + y);
-//			for(int x =0; x < tWidth; x++) {
-//				System.out.print(Tmap[y][x]+ " ");
-//			}
-//			System.out.println();
-//		}
+		for(int y =0; y < tHeight; y++) {
+			System.out.println("LAYER: " + y);
+			for(int x =0; x < tWidth; x++) {
+				System.out.print(Tmap[y][x]+ " ");
+			}
+			System.out.println();
+		}
 
 		container.setSoundOn(true);
 	}
@@ -76,8 +75,9 @@ class PlayingState extends BasicGameState {
 		}
 		ig.runner.render(g);
 		ig.runner.setScale(4.0f);
-		g.drawString(ig.runner.getVelocity().toString(), 100, 100);
 
+		g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
+		g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 110);
 
 	}
 
@@ -88,17 +88,33 @@ class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		InflaterGame ig = (InflaterGame) game;
 
-		if(input.isKeyDown(Input.KEY_S)) {
+
+		if(input.isKeyDown(Input.KEY_DOWN)) {
 			ig.runner.setVelocity(new Vector(0, PLAYER_SPEED));
 		}
-		else if(input.isKeyDown(Input.KEY_W)) {
+		else if(input.isKeyDown(Input.KEY_UP)) {
 			ig.runner.setVelocity(new Vector (0, -PLAYER_SPEED ));
 		}
-		else if (input.isKeyDown(Input.KEY_D)){
-			ig.runner.setVelocity(new Vector (PLAYER_SPEED, 0 ));
+		else if (input.isKeyDown(Input.KEY_RIGHT)){
+			if(ig.runner.getDirection() != "RIGHT") {
+				ig.runner.flipDirection();
+			}
+			if(ig.runner.isDirectionBlocked(Tmap)) {
+				ig.runner.setVelocity(new Vector(0,0));
+			}
+			else
+				ig.runner.setVelocity(new Vector(PLAYER_SPEED, 0));
+
 		}
-		else if (input.isKeyDown(Input.KEY_A)){
-			ig.runner.setVelocity(new Vector (-PLAYER_SPEED, 0 ));
+		else if (input.isKeyDown(Input.KEY_LEFT)){
+			if(ig.runner.getDirection() != "LEFT") {
+				ig.runner.flipDirection();
+			}
+			if(ig.runner.isDirectionBlocked(Tmap)) {
+				ig.runner.setVelocity(new Vector(0,0));
+			}
+			else
+				ig.runner.setVelocity(new Vector (-PLAYER_SPEED, 0 ));
 }
 		else {
 			ig.runner.setVelocity(new Vector(0,0));
