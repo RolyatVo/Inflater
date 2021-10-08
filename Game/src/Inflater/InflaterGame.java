@@ -3,6 +3,7 @@ package Inflater;
 import jig.Entity;
 
 import jig.ResourceManager;
+import jig.Vector;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -31,6 +32,10 @@ public class InflaterGame extends StateBasedGame {
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
+
+	public static final int TilePixelHeight = 64, TilePixelWidth = 64;
+
+
 
 	Runner runner;
 

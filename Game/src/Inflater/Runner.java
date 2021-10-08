@@ -67,6 +67,7 @@ class Runner extends Entity {
     }
 
     /**
+     * Checks to see if the player is on a air tile. If so return true, or else return false.
      * @param Tmap
      * @return Return true if character is above tile ID = 0
      */
@@ -147,30 +148,32 @@ class Runner extends Entity {
     }
 
     /**
+     * Checks if the current facing direction is blocked or not. Currently not blocked for ladders but
+     * blocked for all other blocks
      *
      * @param tmap 2d int array containing 0 for open space or !0 for blocked space
      * @return True if the block the player is facing is a blocked tile
      */
     public boolean isDirectionBlocked(int [][] tmap) {
-        Vector currentPosition = getTilePosition(64,64);
+        float x, y;
+        x = getX();
+        y = getY();
 
-        if(getDirection() == "RIGHT") {
-            if (tmap[(int)currentPosition.getY()][(int)currentPosition.getX()+1] != 0
-                && this.getCoarseGrainedMaxX() > 19*64)
-                    return true;
+        if(getDirection().compareTo("RIGHT") ==0) {
+            if(tmap[(int) (y/64)][(int) ((x-32) /64f) +1] != 0
+                && tmap[(int) (y/64)][(int) ((x-32) /64f) +1] != 71)
+                return true;
         }
-        if(getDirection() == "LEFT") {
-            if (tmap[(int)currentPosition.getY()][(int)currentPosition.getX()-1] != 0
-                && this.getCoarseGrainedMinX() < 64)
-                    return true;
+        if(getDirection().compareTo("LEFT") ==0) {
+            if(tmap[(int) (y/64)][(int) ((x+32) /64f)-1] != 0
+                && tmap[(int) (y/64)][(int) ((x+32) /64f)-1] != 71)
+                return true;
         }
-
-
         return false;
     }
 
     /**
-     *
+     * Check to see if the player is on a ladder tile. (ID of 71)
      * @param tmap
      * @return True if player is in a ladder tile
      */

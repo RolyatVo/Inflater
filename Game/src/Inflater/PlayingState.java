@@ -29,8 +29,6 @@ class PlayingState extends BasicGameState {
 	private int[][] Tmap = new int[tHeight][tWidth];
 	private boolean DEBUG_FLAG= false;
 
-	private float PLAYER_SPEED = 0.25f;
-	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
@@ -41,7 +39,10 @@ class PlayingState extends BasicGameState {
 		int walls = map.getLayerIndex("Walls");
 		for(int y =0; y < tHeight; y++) {
 			for(int x =0; x < tWidth; x++) {
-				Tmap[y][x] = map.getTileId(x,y, walls);
+				if(map.getTileId(x,y,walls) ==73)
+					Tmap[y][x] = 71;
+				else
+					Tmap[y][x] = map.getTileId(x,y, walls);
 			}
 		}
 	}
