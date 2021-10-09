@@ -45,18 +45,21 @@ class PlayingState extends BasicGameState {
 					Tmap[y][x] = map.getTileId(x,y, walls);
 			}
 		}
+
+		ig.coins.add(new Coin(2*64-32, 6*64-32));
+		ig.coins.add(new Coin(15*64-32, 10*64-32));
 	}
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		//Printing out 2d array of map
-		for(int y =0; y < tHeight; y++) {
-			System.out.println("LAYER: " + y);
-			for(int x =0; x < tWidth; x++) {
-				System.out.print(Tmap[y][x]+ " ");
-			}
-			System.out.println();
-		}
+//		for(int y =0; y < tHeight; y++) {
+//			System.out.println("LAYER: " + y);
+//			for(int x =0; x < tWidth; x++) {
+//				System.out.print(Tmap[y][x]+ " ");
+//			}
+//			System.out.println();
+//		}
 
 		container.setSoundOn(true);
 	}
@@ -74,8 +77,10 @@ class PlayingState extends BasicGameState {
 				g.drawLine(0, map.getTileHeight() * i, pWidth, map.getTileHeight() * i);
 
 		}
+		ig.coins.forEach(coin -> coin.render(g));
 		ig.runner.render(g);
 		ig.runner.setScale(4.0f);
+
 
 		g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
 		g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 110);
@@ -91,6 +96,15 @@ class PlayingState extends BasicGameState {
 		InflaterGame ig = (InflaterGame) game;
 
 		ig.runner.move(input, Tmap);
+
+		for(int i =0; i < ig.coins.size(); i++) {
+			if(ig.coins.get(i).collides(ig.runner) != null) {
+				ig.coins.remove(i);
+			}
+		}
+
+		if(ig.coins.isEmpty()) {
+		}
 
 		if(input.isKeyPressed(Input.KEY_P))
 			DEBUG_FLAG = !DEBUG_FLAG;

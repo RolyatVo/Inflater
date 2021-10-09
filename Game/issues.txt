@@ -2,12 +2,16 @@
 [1] Implement a simple collidable 2d for testing purposes.
 [2] Add a character for the player to control.
 [3] Add collision for character and the tile map.
-
+[4] Implement coins that spawn throughout the map
 
   ====  [] Open Issues []  ====
 
-[4] Implement coins that spawn throughout the map
 [5] Add secret door that spawns once all coins are collected.
 [6] Enemy CPUs that spawn in map that will track and follow the player.
 [7] Give player a weapon to destroy the CPUs, have CPUs respawn at the top.
 [8] Adding more levels to the game.
+
+
+ === Found bugs ===
+ Player can move down on ladder even though that leader is on ground floor. This would make the player get stuck in the
+ floor causing them to get stuck.
