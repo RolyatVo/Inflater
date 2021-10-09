@@ -1,12 +1,11 @@
   ====  [] Closed Issues []  ====
 [1] Implement a simple collidable 2d for testing purposes.
 [2] Add a character for the player to control.
-
+[3] Add collision for character and the tile map.
 
 
   ====  [] Open Issues []  ====
 
-[3] Add collision for character and the tile map.
 [4] Implement coins that spawn throughout the map
 [5] Add secret door that spawns once all coins are collected.
 [6] Adding more levels to the game.
