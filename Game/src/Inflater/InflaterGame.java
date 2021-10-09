@@ -8,6 +8,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 
 /**
  *
@@ -29,6 +30,7 @@ public class InflaterGame extends StateBasedGame {
 
 
 	//public static final String PLAYER_RSC = "Inflater/Resources/Sprites/testplayer.png";
+	public static final String COIN_RSC ="Inflater/Resources/Sprites/star_coin_normal_64x64.png";
 
 	public final int ScreenWidth;
 	public final int ScreenHeight;
@@ -38,6 +40,7 @@ public class InflaterGame extends StateBasedGame {
 
 
 	Runner runner;
+	ArrayList<Coin> coins;
 
 
 	/**
@@ -55,8 +58,6 @@ public class InflaterGame extends StateBasedGame {
 		ScreenHeight = height;
 		ScreenWidth = width;
 		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
-
-				
 	}
 	public int getScreenWidth() {
 		return this.ScreenWidth;
@@ -84,7 +85,10 @@ public class InflaterGame extends StateBasedGame {
 		//ResourceManager.loadImage(BALL_BALLIMG_RSC);
 		//ResourceManager.loadImage(PLAYER_RSC);
 
+		ResourceManager.loadImage(COIN_RSC);
+
 		runner = new Runner(2*64-32, 14*64-32, 0f, 0f);
+		coins = new ArrayList<Coin>();
 	}
 	
 	public static void main(String[] args) {
