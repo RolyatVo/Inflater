@@ -18,10 +18,8 @@ class Coin extends Entity {
 
     public Coin(final float x, final float y) throws SlickException {
         super(x, y);
-
         addImageWithBoundingBox(ResourceManager
                 .getImage(InflaterGame.COIN_RSC));
-
     }
 
 
