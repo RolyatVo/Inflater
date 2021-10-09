@@ -29,8 +29,6 @@ class PlayingState extends BasicGameState {
 	private int[][] Tmap = new int[tHeight][tWidth];
 	private boolean DEBUG_FLAG= false;
 
-	private float PLAYER_SPEED = 0.25f;
-	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
@@ -41,7 +39,10 @@ class PlayingState extends BasicGameState {
 		int walls = map.getLayerIndex("Walls");
 		for(int y =0; y < tHeight; y++) {
 			for(int x =0; x < tWidth; x++) {
-				Tmap[y][x] = map.getTileId(x,y, walls);
+				if(map.getTileId(x,y,walls) ==73)
+					Tmap[y][x] = 71;
+				else
+					Tmap[y][x] = map.getTileId(x,y, walls);
 			}
 		}
 	}
@@ -78,6 +79,7 @@ class PlayingState extends BasicGameState {
 
 		g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
 		g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 110);
+		g.drawString("AIRBORNE: " + ig.runner.airborne(Tmap), 100, 130);
 
 	}
 
@@ -88,37 +90,7 @@ class PlayingState extends BasicGameState {
 		Input input = container.getInput();
 		InflaterGame ig = (InflaterGame) game;
 
-
-		if(input.isKeyDown(Input.KEY_DOWN) && ig.runner.isOnLadder(Tmap) && ig.runner.getCoarseGrainedMaxY() < 14*64) {
-			ig.runner.setVelocity(new Vector(0, PLAYER_SPEED));
-		}
-		else if(input.isKeyDown(Input.KEY_UP) && ig.runner.isOnLadder(Tmap)) {
-			ig.runner.setVelocity(new Vector (0, -PLAYER_SPEED ));
-		}
-		else if (input.isKeyDown(Input.KEY_RIGHT)){
-			if(ig.runner.getDirection() != "RIGHT") {
-				ig.runner.flipDirection();
-			}
-			if(ig.runner.isDirectionBlocked(Tmap)) {
-				ig.runner.setVelocity(new Vector(0,0));
-			}
-			else
-				ig.runner.setVelocity(new Vector(PLAYER_SPEED, 0));
-
-		}
-		else if (input.isKeyDown(Input.KEY_LEFT)){
-			if(ig.runner.getDirection() != "LEFT") {
-				ig.runner.flipDirection();
-			}
-			if(ig.runner.isDirectionBlocked(Tmap)) {
-				ig.runner.setVelocity(new Vector(0,0));
-			}
-			else
-				ig.runner.setVelocity(new Vector (-PLAYER_SPEED, 0 ));
-}
-		else {
-			ig.runner.setVelocity(new Vector(0,0));
-		}
+		ig.runner.move(input, Tmap);
 
 		if(input.isKeyPressed(Input.KEY_P))
 			DEBUG_FLAG = !DEBUG_FLAG;
