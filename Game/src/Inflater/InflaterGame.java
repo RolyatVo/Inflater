@@ -40,7 +40,7 @@ public class InflaterGame extends StateBasedGame {
     Runner runner;
     Door door;
     ArrayList<Coin> coins;
-
+    ArrayList<Guard> guards;
 
     /**
      * Create the BounceGame frame, saving the width and height for later use.
@@ -88,6 +88,8 @@ public class InflaterGame extends StateBasedGame {
 
         runner = new Runner(2 * 64 - 32, 14 * 64 - 32, 0f, 0f);
         coins = new ArrayList<Coin>();
+        guards = new ArrayList<Guard>();
+
     }
 
     public static void main(String[] args) {

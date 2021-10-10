@@ -50,6 +50,7 @@ class PlayingState extends BasicGameState {
         ig.coins.add(new Coin(15 * 64 - 32, 10 * 64 - 32));
 
         ig.door = new Door(10 * 64 - 32, 14 * 64 - 32);
+        ig.guards.add(new Guard(6 * 64 - 32, 6 * 64 - 32));
     }
 
     @Override
@@ -81,6 +82,10 @@ class PlayingState extends BasicGameState {
 
         }
         ig.coins.forEach(coin -> coin.render(g));
+        for (Guard guard : ig.guards) {
+            guard.render(g);
+            guard.setScale(4.0f);
+        }
         if (ig.coins.isEmpty())
             ig.door.render(g);
         ig.runner.render(g);
