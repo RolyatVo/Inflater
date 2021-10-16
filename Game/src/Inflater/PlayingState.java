@@ -1,6 +1,7 @@
 package Inflater;
 
 import jig.Vector;
+import java.util.List;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -27,6 +28,8 @@ class PlayingState extends BasicGameState {
     private final int pHeight = 960;
     private final int pWidth = 1280;
     private final int[][] Tmap = new int[tHeight][tWidth];
+    private AStar pathMap;
+    private List<Node> path;
     private boolean DEBUG_FLAG = false;
 
     @Override
@@ -45,7 +48,6 @@ class PlayingState extends BasicGameState {
                     Tmap[y][x] = map.getTileId(x, y, walls);
             }
         }
-
         ig.coins.add(new Coin(2 * 64 - 32, 6 * 64 - 32));
         ig.coins.add(new Coin(15 * 64 - 32, 10 * 64 - 32));
 
@@ -56,13 +58,13 @@ class PlayingState extends BasicGameState {
     @Override
     public void enter(GameContainer container, StateBasedGame game) {
         //Printing out 2d array of map
-//		for(int y =0; y < tHeight; y++) {
-//			System.out.println("LAYER: " + y);
-//			for(int x =0; x < tWidth; x++) {
-//				System.out.print(Tmap[y][x]+ " ");
-//			}
-//			System.out.println();
-//		}
+		for(int y =0; y < tHeight; y++) {
+			//System.out.println("LAYER: " + y);
+			for(int x =0; x < tWidth; x++) {
+				System.out.printf("%3d", Tmap[y][x]);
+			}
+			System.out.println();
+		}
 
         container.setSoundOn(true);
     }
@@ -93,8 +95,8 @@ class PlayingState extends BasicGameState {
 
 
         g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
-        g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 110);
-        g.drawString("AIRBORNE: " + ig.runner.airborne(Tmap), 100, 130);
+        g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 120);
+        g.drawString("AIRBORNE: " + ig.runner.airborne(Tmap), 100, 140);
 
     }
 
@@ -105,12 +107,22 @@ class PlayingState extends BasicGameState {
         Input input = container.getInput();
         InflaterGame ig = (InflaterGame) game;
 
-        ig.runner.move(input, Tmap);
+       ig.runner.move(input, Tmap);
 
         for (int i = 0; i < ig.coins.size(); i++) {
             if (ig.coins.get(i).collides(ig.runner) != null) {
                 ig.coins.remove(i);
             }
+        }
+        if(input.isKeyPressed(Input.KEY_F)) {
+            int mouseX = (int) (input.getAbsoluteMouseX()*(1/0.6)/64);
+            int mouseY = (int)(input.getAbsoluteMouseY()*(1/0.6)/64);
+            pathMap = new AStar(Tmap);
+
+            System.out.println("CLICKED AT: " + mouseX + " " + mouseY );
+            path = pathMap.aStarSearch(mouseX,mouseY, (int)ig.runner.getTilePosition(64,64).getX(),(int)ig.runner.getTilePosition(64,64).getY());
+            path.forEach(n -> System.out.print("("+ n.getX() + "," + n.getY()+") "));
+            System.out.println("");
         }
 
         if (input.isKeyPressed(Input.KEY_P))
@@ -119,6 +131,7 @@ class PlayingState extends BasicGameState {
         if (ig.door.collides(ig.runner) != null && ig.coins.isEmpty())
             System.out.println("GO TO NEXT LEVEL!");
         ig.runner.update(delta);
+        ig.guards.forEach(guard -> guard.update(delta));
     }
 
     @Override
