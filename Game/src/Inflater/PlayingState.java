@@ -107,13 +107,20 @@ class PlayingState extends BasicGameState {
         Input input = container.getInput();
         InflaterGame ig = (InflaterGame) game;
 
-       ig.runner.move(input, Tmap);
-
+        if(input.isKeyDown(Input.KEY_SPACE)) {
+            ig.runner.setVelocity(new Vector(0,0));
+            ig.runner.pumpDirection(ig.guards);
+        }
+        else {
+            ig.runner.move(input, Tmap);
+        }
         for (int i = 0; i < ig.coins.size(); i++) {
             if (ig.coins.get(i).collides(ig.runner) != null) {
                 ig.coins.remove(i);
             }
         }
+
+
 
         if (input.isKeyPressed(Input.KEY_P))
             DEBUG_FLAG = !DEBUG_FLAG;
