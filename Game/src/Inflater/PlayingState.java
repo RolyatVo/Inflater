@@ -114,16 +114,6 @@ class PlayingState extends BasicGameState {
                 ig.coins.remove(i);
             }
         }
-        if(input.isKeyPressed(Input.KEY_F)) {
-            int mouseX = (int) (input.getAbsoluteMouseX()*(1/0.6)/64);
-            int mouseY = (int)(input.getAbsoluteMouseY()*(1/0.6)/64);
-            pathMap = new AStar(Tmap);
-
-            System.out.println("CLICKED AT: " + mouseX + " " + mouseY );
-            path = pathMap.aStarSearch(mouseX,mouseY, (int)ig.runner.getTilePosition(64,64).getX(),(int)ig.runner.getTilePosition(64,64).getY());
-            path.forEach(n -> System.out.print("("+ n.getX() + "," + n.getY()+") "));
-            System.out.println("");
-        }
 
         if (input.isKeyPressed(Input.KEY_P))
             DEBUG_FLAG = !DEBUG_FLAG;
@@ -131,7 +121,8 @@ class PlayingState extends BasicGameState {
         if (ig.door.collides(ig.runner) != null && ig.coins.isEmpty())
             System.out.println("GO TO NEXT LEVEL!");
         ig.runner.update(delta);
-        ig.guards.forEach(guard -> guard.update(delta));
+        ig.guards.forEach(guard -> guard.update(delta, Tmap, (int)ig.runner.getTilePosition(64,64).getX(),
+                (int)ig.runner.getTilePosition(64,64).getY()));
     }
 
     @Override
