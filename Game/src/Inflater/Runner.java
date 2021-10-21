@@ -228,7 +228,7 @@ class Runner extends Entity {
      *
      * @param guards
      */
-    public void pumpDirection(ArrayList<Guard> guards) {
+    public void pumpDirection(ArrayList<Guard> guards, int delta) {
         //TODO: Implement taze functionality into pumpDirection change the image when the player pumps
         for (int i = 0; i < guards.size(); i++) {
             if (guardIsRight(guards.get(i))) {
@@ -236,13 +236,13 @@ class Runner extends Entity {
                 addImage(runPumpingR);
                 this.tazing = "RIGHT";
 //                System.out.println("PUMPED RIGHT!!");
-                guards.get(i).tazed();
+                guards.get(i).tazed(delta);
             } else if (guardIsLeft(guards.get(i))) {
                 removeImage(currentImage);
                 addImage(runPumpingL);
                 this.tazing = "LEFT";
 //                System.out.println("PUMPED LEFT!!");
-                guards.get(i).tazed();
+                guards.get(i).tazed(delta);
                 //Taze guard on left
             }
         }

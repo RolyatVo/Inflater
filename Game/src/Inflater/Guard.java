@@ -13,11 +13,13 @@ import org.newdawn.slick.SpriteSheet;
 class Guard extends Entity {
     private float GUARD_SPEED = 0.2f;
     private Vector velocity = new Vector(0, 0);
-    private int counter, explodetimer;
+    private int counter;
+    public int explodetimer;
     public boolean tazed;
     private AStar pathMap;
     private List<Node> path;
     private String direction;
+
 
 
     public List<Node> getPath() {
@@ -103,8 +105,9 @@ class Guard extends Entity {
             return new Vector(0, 0);
     }
 
-    public void tazed() {
+    public void tazed(int delta) {
         this.tazed = true;
+        explodetimer +=delta;
 
     }
 
@@ -133,7 +136,6 @@ class Guard extends Entity {
                 translate(velocity.scale(delta));
             }
             else {
-
                 setVelocity(new Vector(0,0));
             }
 

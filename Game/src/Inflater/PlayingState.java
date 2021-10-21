@@ -2,6 +2,7 @@ package Inflater;
 
 import jig.Vector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.GameContainer;
@@ -101,6 +102,13 @@ class PlayingState extends BasicGameState {
         g.drawString("AIRBORNE: " + ig.runner.airborne(Tmap), 100, 140);
 
     }
+    private void checkGuardsTimer(ArrayList<Guard> guards) {
+        for(int i =0; i < guards.size(); i++ ) {
+            if(guards.get(i).explodetimer > 3000) {
+                guards.remove(i);
+            }
+        }
+    }
 
     @Override
     public void update(GameContainer container, StateBasedGame game,
@@ -114,8 +122,10 @@ class PlayingState extends BasicGameState {
         }
         if (input.isKeyDown(Input.KEY_SPACE)) {
             ig.runner.setVelocity(new Vector(0, 0));
-            ig.runner.pumpDirection(ig.guards);
+            ig.runner.pumpDirection(ig.guards, delta);
+            checkGuardsTimer(ig.guards);
         } else {
+            ig.guards.forEach(guard -> guard.explodetimer =0);
             ig.runner.move(input, Tmap);
         }
         for (int i = 0; i < ig.coins.size(); i++) {
@@ -123,6 +133,7 @@ class PlayingState extends BasicGameState {
                 ig.coins.remove(i);
             }
         }
+
 
 
         if (input.isKeyPressed(Input.KEY_P))
