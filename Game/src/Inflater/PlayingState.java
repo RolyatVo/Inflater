@@ -1,7 +1,9 @@
 package Inflater;
 
 import jig.Vector;
+
 import java.util.List;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -58,13 +60,13 @@ class PlayingState extends BasicGameState {
     @Override
     public void enter(GameContainer container, StateBasedGame game) {
         //Printing out 2d array of map
-		for(int y =0; y < tHeight; y++) {
-			//System.out.println("LAYER: " + y);
-			for(int x =0; x < tWidth; x++) {
-				System.out.printf("%3d", Tmap[y][x]);
-			}
-			System.out.println();
-		}
+//        for (int y = 0; y < tHeight; y++) {
+//            //System.out.println("LAYER: " + y);
+//            for (int x = 0; x < tWidth; x++) {
+//                System.out.printf("%3d", Tmap[y][x]);
+//            }
+//            System.out.println();
+//        }
 
         container.setSoundOn(true);
     }
@@ -106,12 +108,14 @@ class PlayingState extends BasicGameState {
 
         Input input = container.getInput();
         InflaterGame ig = (InflaterGame) game;
-
-        if(input.isKeyDown(Input.KEY_SPACE)) {
-            ig.runner.setVelocity(new Vector(0,0));
-            ig.runner.pumpDirection(ig.guards);
+        if (ig.runner.tazing != null) {
+            ig.runner.removeTazing();
+            ig.runner.restoreImage();
         }
-        else {
+        if (input.isKeyDown(Input.KEY_SPACE)) {
+            ig.runner.setVelocity(new Vector(0, 0));
+            ig.runner.pumpDirection(ig.guards);
+        } else {
             ig.runner.move(input, Tmap);
         }
         for (int i = 0; i < ig.coins.size(); i++) {
@@ -121,15 +125,14 @@ class PlayingState extends BasicGameState {
         }
 
 
-
         if (input.isKeyPressed(Input.KEY_P))
             DEBUG_FLAG = !DEBUG_FLAG;
         //Aft
         if (ig.door.collides(ig.runner) != null && ig.coins.isEmpty())
             System.out.println("GO TO NEXT LEVEL!");
         ig.runner.update(delta);
-        ig.guards.forEach(guard -> guard.update(delta, Tmap, (int)ig.runner.getTilePosition(64,64).getX(),
-                (int)ig.runner.getTilePosition(64,64).getY()));
+        ig.guards.forEach(guard -> guard.update(delta, Tmap, (int) ig.runner.getTilePosition(64, 64).getX(),
+                (int) ig.runner.getTilePosition(64, 64).getY()));
     }
 
     @Override

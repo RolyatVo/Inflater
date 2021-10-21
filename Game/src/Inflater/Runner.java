@@ -11,17 +11,16 @@ import org.newdawn.slick.SpriteSheet;
 import java.util.ArrayList;
 
 class Runner extends Entity {
-    private SpriteSheet runguy = new SpriteSheet("Inflater/Resources/Sprites/loderunner.png", 16, 16);
-    private Image runLEFT = runguy.getSubImage(0, 0, 16, 16);
-    private Image runRIGHT = runLEFT.getFlippedCopy(true, false);
-    private Image runPumpingL = runguy.getSubImage(0, 2, 16, 16);
-    private Image runPumpingR = runPumpingL.getFlippedCopy(true, false);
+    private final SpriteSheet runguy = new SpriteSheet("Inflater/Resources/Sprites/loderunner.png", 16, 16);
+    private final Image runLEFT = runguy.getSubImage(0, 0, 16, 16);
+    private final Image runRIGHT = runLEFT.getFlippedCopy(true, false);
+    private final Image runPumpingL = runguy.getSubImage(0, 32, 16, 16);
+    private final Image runPumpingR = runPumpingL.getFlippedCopy(true, false);
+    private Image currentImage;
+    public String tazing;
     private Vector velocity, initalV;
     private String direction;
-    private float RANGE = 2f;
-
-    private final float PLAYER_SPEED = 0.25f;
-    private final float GRAVITY = 0.25f;
+    private final float RANGE = 2f;
 
 
     private int countdown;
@@ -29,7 +28,10 @@ class Runner extends Entity {
 
     public Runner(final float x, final float y, final float vx, final float vy) throws SlickException {
         super(x, y);
+        runLEFT.setName("RUN LEFT");
+        runRIGHT.setName("RUN RIGHT");
         addImageWithBoundingBox(runLEFT);
+        currentImage = runLEFT;
         velocity = new Vector(vx, vy);
         initalV = velocity.copy();
         countdown = 0;
@@ -90,6 +92,7 @@ class Runner extends Entity {
      * @param Tmap  2d Array containing ID of collideable stuff
      */
     public void move(Input input, int[][] Tmap) {
+        float PLAYER_SPEED = 0.25f;
         if (input.isKeyDown(Input.KEY_DOWN) && isOnLadder(Tmap) && getCoarseGrainedMaxY() < 14 * 64) {
             setVelocity(new Vector(0, PLAYER_SPEED));
         } else if (input.isKeyDown(Input.KEY_UP) && isOnLadder(Tmap)) {
@@ -116,6 +119,7 @@ class Runner extends Entity {
         }
 
         //Check if the player is in the air, if so apply gravity
+        float GRAVITY = 0.25f;
         if (airborne(Tmap))
             setVelocity(new Vector(this.velocity.getX(), this.velocity.getY() + GRAVITY));
     }
@@ -139,9 +143,11 @@ class Runner extends Entity {
         if (direction == "RIGHT") {
             removeImage(runRIGHT);
             addImage(runLEFT);
+            this.currentImage = runLEFT;
         } else {
             removeImage(runLEFT);
             addImage(runRIGHT);
+            this.currentImage = runRIGHT;
         }
 
     }
@@ -188,6 +194,12 @@ class Runner extends Entity {
         return false;
     }
 
+    /**
+     * Check to see if the guard is directly to the right of the player, with a range.
+     *
+     * @param guard
+     * @return rue if guard is close and to the right of player.
+     */
     private boolean guardIsRight(Guard guard) {
         if (this.getCoarseGrainedMaxX() + RANGE > guard.getCoarseGrainedMinX() &&
                 this.getX() < guard.getX())
@@ -196,6 +208,12 @@ class Runner extends Entity {
             return false;
     }
 
+    /**
+     * Check to see if the guard is directly to the left of the player with a added range.
+     *
+     * @param guard
+     * @return True if guard is close and to the left of player.
+     */
     private boolean guardIsLeft(Guard guard) {
         if (this.getCoarseGrainedMinX() - RANGE < guard.getCoarseGrainedMaxX() &&
                 this.getX() > guard.getX())
@@ -204,40 +222,53 @@ class Runner extends Entity {
             return false;
     }
 
-    public void pumpDirection(ArrayList<Guard> guards) {
-        //TODO: Implement taze functionality into pumpDirection
 
+    /**
+     * Loops through each guard checking if they are in range of the player. if they are then we taze them
+     *
+     * @param guards
+     */
+    public void pumpDirection(ArrayList<Guard> guards) {
+        //TODO: Implement taze functionality into pumpDirection change the image when the player pumps
         for (int i = 0; i < guards.size(); i++) {
             if (guardIsRight(guards.get(i))) {
-              //  System.out.println("PUMPED RIGHT!!");
+                removeImage(currentImage);
+                addImage(runPumpingR);
+                this.tazing = "RIGHT";
+//                System.out.println("PUMPED RIGHT!!");
                 guards.get(i).tazed();
             } else if (guardIsLeft(guards.get(i))) {
-                //System.out.println("PUMPED LEFT!!");
+                removeImage(currentImage);
+                addImage(runPumpingL);
+                this.tazing = "LEFT";
+//                System.out.println("PUMPED LEFT!!");
                 guards.get(i).tazed();
                 //Taze guard on left
             }
         }
+    }
+    public void restoreImage() {
+        if(direction == "RIGHT") addImage(runRIGHT);
+        else addImage(runLEFT);
+        tazing = null;
+    }
+    public void removeTazing() {
+        if(tazing == "RIGHT")
+            removeImage(runPumpingR);
+        else
+            removeImage(runPumpingL);
     }
 
     /**
      * @param delta the number of milliseconds since the last update
      */
     public void update(final int delta) {
-
+//        System.out.println("CURRENT IMAGE: "+ currentImage.getName());
         if (this.timer <= 0) {
             translate(velocity.scale(delta));
         } else if (this.timer > 0) {
             timer--;
             velocity.scale(0);
         }
-//        if (countdown > 0) {
-//            countdown -= delta;
-//            if (countdown <= 0) {
-//                addImageWithBoundingBox(ResourceManager
-//                        .getImage(BounceGame.BALL_BALLIMG_RSC));
-//                removeImage(ResourceManager
-//                        .getImage(BounceGame.BALL_BROKENIMG_RSC));
-//            }
-//        }
     }
 }

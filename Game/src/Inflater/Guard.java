@@ -13,11 +13,12 @@ import org.newdawn.slick.SpriteSheet;
 class Guard extends Entity {
     private float GUARD_SPEED = 0.2f;
     private Vector velocity = new Vector(0, 0);
-    private int counter;
+    private int counter, explodetimer;
     public boolean tazed;
     private AStar pathMap;
     private List<Node> path;
     private String direction;
+
 
     public List<Node> getPath() {
         return path;
@@ -49,7 +50,7 @@ class Guard extends Entity {
         addImageWithBoundingBox(guard);
         counter = getRandomInt(1500, 1000);
         this.tazed = false;
-        System.out.println("COUNTER: " + counter);
+        //System.out.println("COUNTER: " + counter);
     }
 
     public int getTileX() {
@@ -67,7 +68,7 @@ class Guard extends Entity {
 
         if (this.getX() < cX * 64 + 48 && this.getX() > cX * 64 + 16 &&
                 this.getY() < cY * 64 + 48 && this.getY() > cY * 64 + 16) {
-            System.out.println("Removed X:" + path.get(0).getX() + " Y:" + path.get(0).getY());
+           // System.out.println("Removed X:" + path.get(0).getX() + " Y:" + path.get(0).getY());
             path.remove(0);
             return true;
         }
@@ -104,6 +105,7 @@ class Guard extends Entity {
 
     public void tazed() {
         this.tazed = true;
+
     }
 
 
@@ -119,9 +121,9 @@ class Guard extends Entity {
                 setPathMap(new AStar(Tmap));
                 setPath(pathMap.aStarSearch(getTileX(), getTileY(), runnerX, runnnerY));
                 this.counter = getRandomInt(2000, 1000);
-                System.out.println("NEW PATH: " + this.counter);
-                path.forEach(n -> System.out.print("(" + n.getX() + "," + n.getY() + ") "));
-                System.out.println("");
+                //System.out.println("NEW PATH: " + this.counter);
+               // path.forEach(n -> System.out.print("(" + n.getX() + "," + n.getY() + ") "));
+               // System.out.println("");
             }
         }
         if (path != null) {
@@ -131,11 +133,12 @@ class Guard extends Entity {
                 translate(velocity.scale(delta));
             }
             else {
+
                 setVelocity(new Vector(0,0));
             }
 
             if (!path.isEmpty() && guardArrivedAtPath()) {
-                System.out.println("ARRIVED IN PATH BLOCK");
+             //   System.out.println("ARRIVED IN PATH BLOCK");
             }
         }
 
