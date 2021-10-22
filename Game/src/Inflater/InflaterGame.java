@@ -24,6 +24,7 @@ public class InflaterGame extends StateBasedGame {
 
     public static final int STARTUPSTATE = 0;
     public static final int PLAYINGSTATE = 1;
+    public static final int LEVEL2 = 2;
     public static final int GAMEOVERSTATE = -1;
 
 
@@ -33,6 +34,7 @@ public class InflaterGame extends StateBasedGame {
 
     public final int ScreenWidth;
     public final int ScreenHeight;
+    public int current_level = 1;
 
     public static final int TilePixelHeight = 64, TilePixelWidth = 64;
 
@@ -70,6 +72,7 @@ public class InflaterGame extends StateBasedGame {
         addState(new StartUpState());
         addState(new GameOverState());
         addState(new PlayingState());
+        addState(new Level2());
 
         // the sound resource takes a particularly long time to load,
         // we preload it here to (1) reduce latency when we first play it

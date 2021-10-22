@@ -41,6 +41,7 @@ class StartUpState extends BasicGameState {
 		Input input = container.getInput();
 		InflaterGame bg = (InflaterGame)game;
 		if (input.isKeyDown(Input.KEY_1)) bg.enterState(InflaterGame.PLAYINGSTATE);
+		if (input.isKeyDown(Input.KEY_2)) bg.enterState(InflaterGame.LEVEL2);
 
 		if (input.isKeyDown(Input.KEY_SPACE))
 			bg.enterState(InflaterGame.PLAYINGSTATE);

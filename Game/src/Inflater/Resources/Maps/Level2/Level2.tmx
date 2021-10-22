@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="64" tileheight="64" infinite="0" nextlayerid="4" nextobjectid="1">
+ <tileset firstgid="1" source="cpa.tsx"/>
+ <tileset firstgid="37" source="platform.tsx"/>
+ <tileset firstgid="38" source="../Level1/tileset2.tsx"/>
+ <tileset firstgid="138" source="rope.tsx"/>
+ <layer id="1" name="Background" width="20" height="15">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAE+NjYGDgGwSYl4rm8A+QH6hpL7XCY7DYQwhzQjG1whObebjUDeVwo1Z4kWsXvcMBANFZ3AywBAAA
+  </data>
+ </layer>
+ <layer id="3" name="Background2" width="20" height="15">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAE2NgoB0QoKHZo2BggQDD8Izf4ein4QQA5xitp7AEAAA=
+  </data>
+ </layer>
+ <layer id="2" name="Walls" width="20" height="15">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAE7WTUQoAIAhDvYy36yZdul8RN1YsQSiQ18YsIyLN7SrG262nWqLeRd5mc0jfxEP6XniqL9Wvqpfpq1n0O8roxu80U/2w/VN5/fyLx3JBPipP/W8sV7bzbp6zDzOdUqKwBAAA
+  </data>
+ </layer>
+</map>

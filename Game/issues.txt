@@ -12,7 +12,3 @@
 [9] Add rope movement
 [10] Fix bug that allows player to climb down into ground/platforms
 [11] Add mechanic that will make the guards run away
-
- === Found bugs ===
- Player can move down on ladder even though that leader is on ground floor. This would make the player get stuck in the
- floor causing them to get stuck.

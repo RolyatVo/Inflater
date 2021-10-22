@@ -1,5 +1,9 @@
 package Inflater;
 
+import Inflater.AStar;
+import Inflater.Guard;
+import Inflater.InflaterGame;
+import Inflater.Node;
 import jig.Vector;
 
 import java.util.ArrayList;
@@ -24,7 +28,7 @@ import org.newdawn.slick.tiled.TiledMap;
  * <p>
  * Transitions To GameOverState
  */
-class PlayingState extends BasicGameState {
+class Level2 extends BasicGameState {
     private TiledMap map;
     private final int tWidth = 20;
     private final int tHeight = 15;
@@ -35,7 +39,7 @@ class PlayingState extends BasicGameState {
     private List<Node> path;
     private boolean DEBUG_FLAG = false;
     private int [] spawnPoint = new int[2];
-    private int numGuard = 1;
+    private int numGuard = 0;
     private int guardTimer =0;
 
     @Override
@@ -45,13 +49,18 @@ class PlayingState extends BasicGameState {
         spawnPoint[0] = 2;
         spawnPoint[1] = 6;
 
-        map = new TiledMap("Game/src/Inflater/Resources/Maps/Level1/Level1.tmx");
-
+        map = new TiledMap("Game/src/Inflater/Resources/Maps/Level2/Level2.tmx");
+//        ig.coins.add(new Coin(2 * 64 - 32, 6 * 64 - 32));
+//        ig.coins.add(new Coin(15 * 64 - 32, 10 * 64 - 32));
+//
+//        ig.door = new Door(10 * 64 - 32, 14 * 64 - 32);
+//        ig.guards.add(new Guard(6 * 64 - 32, 6 * 64 - 32));
 
         int walls = map.getLayerIndex("Walls");
         for (int y = 0; y < tHeight; y++) {
             for (int x = 0; x < tWidth; x++) {
-                if (map.getTileId(x, y, walls) == 73)
+                if (map.getTileId(x, y, walls) == 73 ||
+                    map.getTileId(x,y,walls) == 108)
                     Tmap[y][x] = 71;
                 else
                     Tmap[y][x] = map.getTileId(x, y, walls);
@@ -65,21 +74,15 @@ class PlayingState extends BasicGameState {
     }
 
     @Override
-    public void enter(GameContainer container, StateBasedGame game) throws SlickException{
-        InflaterGame ig = (InflaterGame) game;
+    public void enter(GameContainer container, StateBasedGame game) {
         //Printing out 2d array of map
         for (int y = 0; y < tHeight; y++) {
             //System.out.println("LAYER: " + y);
             for (int x = 0; x < tWidth; x++) {
-                System.out.printf("%3d", Tmap[y][x]);
+                System.out.printf("%4d", Tmap[y][x]);
             }
             System.out.println();
         }
-        ig.coins.add(new Coin(2 * 64 - 32, 6 * 64 - 32));
-        ig.coins.add(new Coin(15 * 64 - 32, 10 * 64 - 32));
-
-        ig.door = new Door(10 * 64 - 32, 14 * 64 - 32);
-        ig.guards.add(new Guard(6 * 64 - 32, 6 * 64 - 32));
 
         container.setSoundOn(true);
     }
@@ -99,12 +102,15 @@ class PlayingState extends BasicGameState {
 
         }
         ig.coins.forEach(coin -> coin.render(g));
-        for (Guard guard : ig.guards) {
-            guard.render(g);
-            guard.setScale(4.0f);
+        if(ig.guards != null) {
+            for (Guard guard : ig.guards) {
+                guard.render(g);
+                guard.setScale(4.0f);
+            }
         }
-        if (ig.coins.isEmpty())
+        if (ig.coins != null && ig.coins.isEmpty() && ig.door != null) {
             ig.door.render(g);
+        }
         ig.runner.render(g);
         ig.runner.setScale(4.0f);
 
@@ -161,7 +167,7 @@ class PlayingState extends BasicGameState {
         if (input.isKeyPressed(Input.KEY_P))
             DEBUG_FLAG = !DEBUG_FLAG;
         //Aft
-        if (ig.door.collides(ig.runner) != null && ig.coins.isEmpty()) {
+        if ( (ig.door != null && ig.coins != null) && ig.door.collides(ig.runner) != null && ig.coins.isEmpty()) {
             System.out.println("GO TO NEXT LEVEL!");
             ig.current_level +=1;
 
@@ -173,7 +179,7 @@ class PlayingState extends BasicGameState {
 
     @Override
     public int getID() {
-        return InflaterGame.PLAYINGSTATE;
+        return InflaterGame.LEVEL2;
     }
 
 }
