@@ -34,12 +34,16 @@ class PlayingState extends BasicGameState {
     private AStar pathMap;
     private List<Node> path;
     private boolean DEBUG_FLAG = false;
+    private int [] spawnPoint = new int[2];
+    private int numGuard = 1;
+    private int guardTimer =0;
 
     @Override
     public void init(GameContainer container, StateBasedGame game)
             throws SlickException {
         InflaterGame ig = (InflaterGame) game;
-
+        spawnPoint[0] = 2;
+        spawnPoint[1] = 6;
         map = new TiledMap("Game/src/Inflater/Resources/Maps/Level1/Level1.tmx");
 
         int walls = map.getLayerIndex("Walls");
@@ -104,10 +108,13 @@ class PlayingState extends BasicGameState {
     }
     private void checkGuardsTimer(ArrayList<Guard> guards) {
         for(int i =0; i < guards.size(); i++ ) {
-            if(guards.get(i).explodetimer > 3000) {
+            if(guards.get(i).explodetimer > 2500) {
                 guards.remove(i);
             }
         }
+    }
+    private void spawnGuard(ArrayList<Guard> guards) throws SlickException{
+        guards.add(new Guard(spawnPoint[0] * 64 - 32, spawnPoint[1] * 64 - 32));
     }
 
     @Override
@@ -135,6 +142,13 @@ class PlayingState extends BasicGameState {
         }
 
 
+        if(ig.guards.size() < numGuard) {
+            if(guardTimer > 4000) {
+                spawnGuard(ig.guards);
+                guardTimer = 0;
+            }
+            guardTimer += delta;
+        }
 
         if (input.isKeyPressed(Input.KEY_P))
             DEBUG_FLAG = !DEBUG_FLAG;
