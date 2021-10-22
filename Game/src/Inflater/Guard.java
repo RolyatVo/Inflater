@@ -12,20 +12,36 @@ import org.newdawn.slick.SpriteSheet;
 
 class Guard extends Entity {
     private float GUARD_SPEED = 0.2f;
-    private Vector velocity = new Vector(0,0);
+    private Vector velocity = new Vector(0, 0);
     private int counter;
+    public int explodetimer;
+    public boolean tazed;
     private AStar pathMap;
     private List<Node> path;
     private String direction;
 
-    public List<Node> getPath() {           return path; }
+
+
+    public List<Node> getPath() {
+        return path;
+    }
+
     public void setPath(List<Node> path) {
-        if(path != null)
+        if (path != null)
             this.path = path;
     }
-    public void setPathMap(AStar pathMap) { this.pathMap = pathMap; }
-    public Vector getVelocity() {           return this.velocity; }
-    public void setVelocity(Vector v) {     this.velocity = v; }
+
+    public void setPathMap(AStar pathMap) {
+        this.pathMap = pathMap;
+    }
+
+    public Vector getVelocity() {
+        return this.velocity;
+    }
+
+    public void setVelocity(Vector v) {
+        this.velocity = v;
+    }
 
     //Load these later with resource manager
     private final Image guardsheet = new SpriteSheet("Inflater/Resources/Sprites/loderunner.png", 16, 16);
@@ -35,30 +51,34 @@ class Guard extends Entity {
         super(x, y);
         addImageWithBoundingBox(guard);
         counter = getRandomInt(1500, 1000);
-        System.out.println("COUNTER: " + counter);
+        this.tazed = false;
+        //System.out.println("COUNTER: " + counter);
     }
+
     public int getTileX() {
-        return (int) this.getX() /64;
+        return (int) this.getX() / 64;
     }
+
     public int getTileY() {
         return (int) this.getY() / 64;
-
     }
+
     private boolean guardArrivedAtPath() {
         Node current = path.get(0);
         int cX = current.getX();
         int cY = current.getY();
 
-        if(this.getX() < cX * 64+48 && this.getX() > cX * 64+16 &&
-                this.getY() < cY * 64+48 && this.getY() > cY * 64 + 16) {
-            System.out.println("Removed X:" + path.get(0).getX() + " Y:" + path.get(0).getY());
+        if (this.getX() < cX * 64 + 48 && this.getX() > cX * 64 + 16 &&
+                this.getY() < cY * 64 + 48 && this.getY() > cY * 64 + 16) {
+           // System.out.println("Removed X:" + path.get(0).getX() + " Y:" + path.get(0).getY());
             path.remove(0);
             return true;
         }
         return false;
     }
+
     private Vector getNextInPath() {
-        if(!path.isEmpty()) {
+        if (!path.isEmpty()) {
             Node next = path.get(0);
             float pX = this.getX();
             float pY = this.getY();
@@ -81,9 +101,14 @@ class Guard extends Entity {
                     this.getY() < next.getY() * 64 + 40 && this.getY() > next.getY() * 64 + 24)
                 return new Vector(-GUARD_SPEED, 0);
             return this.velocity;
-        }
-        else
-            return new Vector(0,0);
+        } else
+            return new Vector(0, 0);
+    }
+
+    public void tazed(int delta) {
+        this.tazed = true;
+        explodetimer +=delta;
+
     }
 
 
@@ -91,23 +116,31 @@ class Guard extends Entity {
         return (int) Math.floor(Math.random() * (max - min + 1) + min);
     }
 
-    public void update(final int delta, int [][] Tmap, int runnerX, int runnnerY) {
+    public void update(final int delta, int[][] Tmap, int runnerX, int runnnerY) {
         if (this.counter > 0) {
             this.counter -= delta;
             if (this.counter <= 0) {
+                this.tazed = false;
                 setPathMap(new AStar(Tmap));
-                setPath(pathMap.aStarSearch(getTileX(), getTileY(),runnerX,runnnerY ));
+                setPath(pathMap.aStarSearch(getTileX(), getTileY(), runnerX, runnnerY));
                 this.counter = getRandomInt(2000, 1000);
-                System.out.println("NEW PATH: " + this.counter);
-                path.forEach(n -> System.out.print("("+ n.getX() + "," + n.getY()+") "));
-                System.out.println("");
+                //System.out.println("NEW PATH: " + this.counter);
+               // path.forEach(n -> System.out.print("(" + n.getX() + "," + n.getY() + ") "));
+               // System.out.println("");
             }
         }
-        if(path != null) {
-            setVelocity(getNextInPath());
-            translate(velocity.scale(delta));
+        if (path != null) {
+
+            if(!tazed) {
+                setVelocity(getNextInPath());
+                translate(velocity.scale(delta));
+            }
+            else {
+                setVelocity(new Vector(0,0));
+            }
+
             if (!path.isEmpty() && guardArrivedAtPath()) {
-                System.out.println("ARRIVED IN PATH BLOCK");
+             //   System.out.println("ARRIVED IN PATH BLOCK");
             }
         }
 

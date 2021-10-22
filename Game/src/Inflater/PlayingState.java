@@ -1,7 +1,10 @@
 package Inflater;
 
 import jig.Vector;
+
+import java.util.ArrayList;
 import java.util.List;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -31,12 +34,16 @@ class PlayingState extends BasicGameState {
     private AStar pathMap;
     private List<Node> path;
     private boolean DEBUG_FLAG = false;
+    private int [] spawnPoint = new int[2];
+    private int numGuard = 1;
+    private int guardTimer =0;
 
     @Override
     public void init(GameContainer container, StateBasedGame game)
             throws SlickException {
         InflaterGame ig = (InflaterGame) game;
-
+        spawnPoint[0] = 2;
+        spawnPoint[1] = 6;
         map = new TiledMap("Game/src/Inflater/Resources/Maps/Level1/Level1.tmx");
 
         int walls = map.getLayerIndex("Walls");
@@ -58,13 +65,13 @@ class PlayingState extends BasicGameState {
     @Override
     public void enter(GameContainer container, StateBasedGame game) {
         //Printing out 2d array of map
-		for(int y =0; y < tHeight; y++) {
-			//System.out.println("LAYER: " + y);
-			for(int x =0; x < tWidth; x++) {
-				System.out.printf("%3d", Tmap[y][x]);
-			}
-			System.out.println();
-		}
+//        for (int y = 0; y < tHeight; y++) {
+//            //System.out.println("LAYER: " + y);
+//            for (int x = 0; x < tWidth; x++) {
+//                System.out.printf("%3d", Tmap[y][x]);
+//            }
+//            System.out.println();
+//        }
 
         container.setSoundOn(true);
     }
@@ -99,6 +106,16 @@ class PlayingState extends BasicGameState {
         g.drawString("AIRBORNE: " + ig.runner.airborne(Tmap), 100, 140);
 
     }
+    private void checkGuardsTimer(ArrayList<Guard> guards) {
+        for(int i =0; i < guards.size(); i++ ) {
+            if(guards.get(i).explodetimer > 2500) {
+                guards.remove(i);
+            }
+        }
+    }
+    private void spawnGuard(ArrayList<Guard> guards) throws SlickException{
+        guards.add(new Guard(spawnPoint[0] * 64 - 32, spawnPoint[1] * 64 - 32));
+    }
 
     @Override
     public void update(GameContainer container, StateBasedGame game,
@@ -106,13 +123,31 @@ class PlayingState extends BasicGameState {
 
         Input input = container.getInput();
         InflaterGame ig = (InflaterGame) game;
-
-       ig.runner.move(input, Tmap);
-
+        if (ig.runner.tazing != null) {
+            ig.runner.removeTazing();
+            ig.runner.restoreImage();
+        }
+        if (input.isKeyDown(Input.KEY_SPACE)) {
+            ig.runner.setVelocity(new Vector(0, 0));
+            ig.runner.pumpDirection(ig.guards, delta);
+            checkGuardsTimer(ig.guards);
+        } else {
+            ig.guards.forEach(guard -> guard.explodetimer =0);
+            ig.runner.move(input, Tmap);
+        }
         for (int i = 0; i < ig.coins.size(); i++) {
             if (ig.coins.get(i).collides(ig.runner) != null) {
                 ig.coins.remove(i);
             }
+        }
+
+
+        if(ig.guards.size() < numGuard) {
+            if(guardTimer > 4000) {
+                spawnGuard(ig.guards);
+                guardTimer = 0;
+            }
+            guardTimer += delta;
         }
 
         if (input.isKeyPressed(Input.KEY_P))
@@ -121,8 +156,8 @@ class PlayingState extends BasicGameState {
         if (ig.door.collides(ig.runner) != null && ig.coins.isEmpty())
             System.out.println("GO TO NEXT LEVEL!");
         ig.runner.update(delta);
-        ig.guards.forEach(guard -> guard.update(delta, Tmap, (int)ig.runner.getTilePosition(64,64).getX(),
-                (int)ig.runner.getTilePosition(64,64).getY()));
+        ig.guards.forEach(guard -> guard.update(delta, Tmap, (int) ig.runner.getTilePosition(64, 64).getX(),
+                (int) ig.runner.getTilePosition(64, 64).getY()));
     }
 
     @Override
