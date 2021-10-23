@@ -2,6 +2,7 @@
 <map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="64" tileheight="64" infinite="0" nextlayerid="9" nextobjectid="14">
  <tileset firstgid="1" source="tileset2.tsx"/>
  <tileset firstgid="101" source="laboratory.tsx"/>
+ <tileset firstgid="185" source="../Level2/rope.tsx"/>
  <layer id="5" name="Bakground" width="20" height="15">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAE0tlYGBIA+JUKtGFQFxERZpa7hp136j7hrP70oE4A4gzgTgLiLOJlMPlvmIgLgHiUiAuA+JyIuVo7T4AXrvdA7AEAAA=
@@ -12,7 +13,7 @@
    <property name="restrict" value="true"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAE+NhYGDgoSIOZqAeCKGxee4jxDwxAtiTTPfhAsS6e6iaBwqvWCIwerjiMo9Y96CrGyrmRTMQF16EMMg8AOUIeDmwBAAA
+   H4sIAAAAAAAAE7WU2wkAMAgD3c6Zdbrin0h8UFQIFCzJWaRCRLKsrbryQ+KPrIrP/BQoy+3ej4dM/t6VH+Lu/NCcnm/Kg7gi37ZftzNVP+OrGNDe6MAv46ny0CyRZ1ocztv/iukBPq1+7rAEAAA=
   </data>
  </layer>
 </map>

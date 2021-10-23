@@ -50,11 +50,6 @@ class Level2 extends BasicGameState {
         spawnPoint[1] = 6;
 
         map = new TiledMap("Game/src/Inflater/Resources/Maps/Level2/Level2.tmx");
-//        ig.coins.add(new Coin(2 * 64 - 32, 6 * 64 - 32));
-//        ig.coins.add(new Coin(15 * 64 - 32, 10 * 64 - 32));
-//
-//        ig.door = new Door(10 * 64 - 32, 14 * 64 - 32);
-//        ig.guards.add(new Guard(6 * 64 - 32, 6 * 64 - 32));
 
         int walls = map.getLayerIndex("Walls");
         for (int y = 0; y < tHeight; y++) {
@@ -66,15 +61,12 @@ class Level2 extends BasicGameState {
                     Tmap[y][x] = map.getTileId(x, y, walls);
             }
         }
-//        ig.coins.add(new Coin(2 * 64 - 32, 6 * 64 - 32));
-//        ig.coins.add(new Coin(15 * 64 - 32, 10 * 64 - 32));
-//
-//        ig.door = new Door(10 * 64 - 32, 14 * 64 - 32);
-//        ig.guards.add(new Guard(6 * 64 - 32, 6 * 64 - 32));
     }
 
+
     @Override
-    public void enter(GameContainer container, StateBasedGame game) {
+    public void enter(GameContainer container, StateBasedGame game) throws SlickException{
+        InflaterGame ig = (InflaterGame) game;
         //Printing out 2d array of map
         for (int y = 0; y < tHeight; y++) {
             //System.out.println("LAYER: " + y);
@@ -83,8 +75,27 @@ class Level2 extends BasicGameState {
             }
             System.out.println();
         }
+        //reset game
+        ig.coins.clear();
+        ig.guards.clear();
+        ig.runner.reset(2,14);
 
         container.setSoundOn(true);
+
+        ig.coins.add(new Coin(middle(2), middle(3)));
+        ig.coins.add(new Coin( middle(2), middle(6)));
+        ig.coins.add(new Coin(middle(2), middle(11)));
+        ig.coins.add(new Coin(middle(19), middle(2)));
+        ig.coins.add(new Coin(middle(19), middle(5)));
+        ig.coins.add(new Coin(middle(19), middle(8)));
+        ig.coins.add(new Coin(middle(19), middle(11)));
+
+        ig.door = new Door(middle(19), middle(14));
+
+        ig.guards.add(new Guard(middle(11),middle(3)));
+        ig.guards.add(new Guard(middle(4),middle(6)));
+
+
     }
 
     @Override
@@ -120,6 +131,7 @@ class Level2 extends BasicGameState {
         g.drawString("AIRBORNE: " + ig.runner.airborne(Tmap), 100, 140);
 
     }
+    private float middle(int a) { return a * 64 -32; }
     private void checkGuardsTimer(ArrayList<Guard> guards) {
         for(int i =0; i < guards.size(); i++ ) {
             if(guards.get(i).explodetimer > 2500) {
@@ -166,6 +178,8 @@ class Level2 extends BasicGameState {
 
         if (input.isKeyPressed(Input.KEY_P))
             DEBUG_FLAG = !DEBUG_FLAG;
+        if(input.isKeyPressed(Input.KEY_C))
+            ig.coins.clear();
         //Aft
         if ( (ig.door != null && ig.coins != null) && ig.door.collides(ig.runner) != null && ig.coins.isEmpty()) {
             System.out.println("GO TO NEXT LEVEL!");

@@ -12,13 +12,16 @@ import java.util.ArrayList;
 
 /**
  * === Credits ===
- * <p>
+ *
  * Sprite Pack
  * Author: yd
  * https://opengameart.org/content/platformer-sprites
- * <p>
+ *
  * coins
  * https://opengameart.org/content/coin-animation
+ *
+ * level2
+ * https://opengameart.org/content/2d-castle-platformer-starter-assets
  */
 public class InflaterGame extends StateBasedGame {
 

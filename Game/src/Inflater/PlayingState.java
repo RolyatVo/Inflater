@@ -57,11 +57,6 @@ class PlayingState extends BasicGameState {
                     Tmap[y][x] = map.getTileId(x, y, walls);
             }
         }
-//        ig.coins.add(new Coin(2 * 64 - 32, 6 * 64 - 32));
-//        ig.coins.add(new Coin(15 * 64 - 32, 10 * 64 - 32));
-//
-//        ig.door = new Door(10 * 64 - 32, 14 * 64 - 32);
-//        ig.guards.add(new Guard(6 * 64 - 32, 6 * 64 - 32));
     }
 
     @Override
@@ -69,13 +64,12 @@ class PlayingState extends BasicGameState {
         InflaterGame ig = (InflaterGame) game;
         //Printing out 2d array of map
         for (int y = 0; y < tHeight; y++) {
-            //System.out.println("LAYER: " + y);
             for (int x = 0; x < tWidth; x++) {
-                System.out.printf("%3d", Tmap[y][x]);
+                System.out.printf("%4d", Tmap[y][x]);
             }
             System.out.println();
         }
-        ig.coins.add(new Coin(2 * 64 - 32, 6 * 64 - 32));
+        ig.coins.add(new Coin(2 * 64 - 32, 7 * 64 - 32));
         ig.coins.add(new Coin(15 * 64 - 32, 10 * 64 - 32));
 
         ig.door = new Door(10 * 64 - 32, 14 * 64 - 32);
@@ -161,10 +155,9 @@ class PlayingState extends BasicGameState {
         if (input.isKeyPressed(Input.KEY_P))
             DEBUG_FLAG = !DEBUG_FLAG;
         //Aft
-        if (ig.door.collides(ig.runner) != null && ig.coins.isEmpty()) {
+        if (ig.door.collides(ig.runner) != null && ig.coins.isEmpty() || input.isKeyDown(Input.KEY_2)) {
             System.out.println("GO TO NEXT LEVEL!");
-            ig.current_level +=1;
-
+            ig.enterState(InflaterGame.LEVEL2);
         }
         ig.runner.update(delta);
         ig.guards.forEach(guard -> guard.update(delta, Tmap, (int) ig.runner.getTilePosition(64, 64).getX(),
