@@ -63,6 +63,10 @@ class Runner extends Entity {
     public void setDirection(String direction) {
         this.direction = direction;
     }
+    public void reset(int x, int y) {
+        this.setX(x*64-32);
+        this.setY(y*64-32);
+    }
 
     /**
      * @param tileWidth  Width of a tile in pixels
@@ -92,7 +96,7 @@ class Runner extends Entity {
      * @param Tmap  2d Array containing ID of collideable stuff
      */
     public void move(Input input, int[][] Tmap) {
-        float PLAYER_SPEED = 0.25f;
+        float PLAYER_SPEED = 0.20f;
         if (input.isKeyDown(Input.KEY_DOWN) && isOnLadder(Tmap) && getCoarseGrainedMaxY() < 14 * 64) {
             setVelocity(new Vector(0, PLAYER_SPEED));
         } else if (input.isKeyDown(Input.KEY_UP) && isOnLadder(Tmap)) {

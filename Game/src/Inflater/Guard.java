@@ -11,7 +11,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 class Guard extends Entity {
-    private float GUARD_SPEED = 0.2f;
+    private float GUARD_SPEED = 0.18f;
     private Vector velocity = new Vector(0, 0);
     private int counter;
     public int explodetimer;
@@ -85,7 +85,7 @@ class Guard extends Entity {
             int nextX = next.getX();
             int nextY = next.getY();
             //Below guard
-            if (this.getX() < next.getX() * 64 + 40 && this.getX() > next.getX() * 64 + 24
+            if (this.getX() < next.getX() * 64 + 36 && this.getX() > next.getX() * 64 + 28
                     && this.getY() < next.getY() * 64 + 32)
                 return new Vector(0, GUARD_SPEED);
                 //Above guard
@@ -94,11 +94,11 @@ class Guard extends Entity {
                 return new Vector(0, -GUARD_SPEED);
                 //RIght of Guard
             else if (this.getX() < next.getX() * 64 + 32 &&
-                    this.getY() < next.getY() * 64 + 40 && this.getY() > next.getY() * 64 + 24)
+                    this.getY() < next.getY() * 64 + 36 && this.getY() > next.getY() * 64 + 28)
                 return new Vector(GUARD_SPEED, 0);
                 //Left of Guard
             else if (this.getX() > next.getX() * 64 + 32 &&
-                    this.getY() < next.getY() * 64 + 40 && this.getY() > next.getY() * 64 + 24)
+                    this.getY() < next.getY() * 64 + 36 && this.getY() > next.getY() * 64 + 28)
                 return new Vector(-GUARD_SPEED, 0);
             return this.velocity;
         } else
@@ -122,6 +122,8 @@ class Guard extends Entity {
             if (this.counter <= 0) {
                 this.tazed = false;
                 setPathMap(new AStar(Tmap));
+//                pathMap.printPathMap();
+//                System.out.println(" ");
                 setPath(pathMap.aStarSearch(getTileX(), getTileY(), runnerX, runnnerY));
                 this.counter = getRandomInt(2000, 1000);
                 //System.out.println("NEW PATH: " + this.counter);
