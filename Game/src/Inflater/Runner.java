@@ -16,12 +16,16 @@ class Runner extends Entity {
     private final Image runRIGHT = runLEFT.getFlippedCopy(true, false);
     private final Image runPumpingL = runguy.getSubImage(0, 32, 16, 16);
     private final Image runPumpingR = runPumpingL.getFlippedCopy(true, false);
+    private final Image climbL = runguy.getSubImage(4 * 16, 16, 16, 16);
+    private final Image climbR = climbL.getFlippedCopy(true,false);
+
+
     private Image currentImage;
     public String tazing;
+    public boolean climbing;
     private Vector velocity, initalV;
     private String direction;
     private final float RANGE = 2f;
-
 
     private int countdown;
     private int timer;
@@ -84,7 +88,7 @@ class Runner extends Entity {
      * @return Return true if character is above tile ID = 0
      */
     public boolean airborne(int[][] Tmap) {
-        return Tmap[(int) ((getY() - 32f) / 64) + 1][(int) (getX() / 64)] == 0;
+        return Tmap[(int) ((getY() - 32f) / 64) + 1][(int) (getX() / 64)] == 0 && !isClimbing(Tmap);
     }
 
     /**
@@ -97,7 +101,7 @@ class Runner extends Entity {
      */
     public void move(Input input, int[][] Tmap) {
         float PLAYER_SPEED = 0.20f;
-        if (input.isKeyDown(Input.KEY_DOWN) && isOnLadder(Tmap) && getCoarseGrainedMaxY() < 14 * 64) {
+        if (input.isKeyDown(Input.KEY_DOWN) &&( isOnLadder(Tmap) || isOnRope(Tmap) )&& getCoarseGrainedMaxY() < 14 * 64) {
             setVelocity(new Vector(0, PLAYER_SPEED));
         } else if (input.isKeyDown(Input.KEY_UP) && isOnLadder(Tmap)) {
             setVelocity(new Vector(0, -PLAYER_SPEED));
@@ -124,7 +128,7 @@ class Runner extends Entity {
 
         //Check if the player is in the air, if so apply gravity
         float GRAVITY = 0.25f;
-        if (airborne(Tmap))
+        if (!isClimbing(Tmap) && airborne(Tmap) )
             setVelocity(new Vector(this.velocity.getX(), this.velocity.getY() + GRAVITY));
     }
 
@@ -170,14 +174,37 @@ class Runner extends Entity {
 
         if (getDirection().compareTo("RIGHT") == 0) {
             if (tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 0
-                    && tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 71)
+                    && tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 71
+                    &&tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 139
+                    && tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 186)
                 return true;
         }
         if (getDirection().compareTo("LEFT") == 0) {
             if (tmap[(int) (y / 64)][(int) ((x + 32) / 64f) - 1] != 0
-                    && tmap[(int) (y / 64)][(int) ((x + 32) / 64f) - 1] != 71)
+                    && tmap[(int) (y / 64)][(int) ((x + 32) / 64f) - 1] != 71
+                    && tmap[(int) (y / 64)][(int) ((x + 32) / 64f) - 1] != 139
+                    && tmap[(int) (y / 64)][(int) ((x + 32) / 64f) - 1] != 186)
                 return true;
         }
+        return false;
+    }
+    public boolean isOnRope(int[][] tmap) {
+        int playerY = (int) getTilePosition(64, 64).getY();
+        int playerX = (int) getTilePosition(64, 64).getX();
+        if (tmap[playerY][playerX] == 186 || tmap[playerY][playerX] == 139
+            || tmap[playerY+1][playerX] == 186 || tmap[playerY+1][playerX] == 139) {
+            return true;
+        }
+        return false;
+    }
+    public boolean isClimbing(int [][] tmap) {
+        int playerY = (int) getTilePosition(64, 64).getY();
+        int playerX = (int) getTilePosition(64, 64).getX();
+        if (tmap[playerY][playerX] == 186 || tmap[playerY][playerX] == 139) {
+            climbing = true;
+            return true;
+        }
+        climbing = false;
         return false;
     }
 
@@ -241,12 +268,14 @@ class Runner extends Entity {
                 this.tazing = "RIGHT";
 //                System.out.println("PUMPED RIGHT!!");
                 guards.get(i).tazed(delta);
+                break;
             } else if (guardIsLeft(guards.get(i))) {
                 removeImage(currentImage);
                 addImage(runPumpingL);
                 this.tazing = "LEFT";
 //                System.out.println("PUMPED LEFT!!");
                 guards.get(i).tazed(delta);
+                break;
                 //Taze guard on left
             }
         }
@@ -262,11 +291,56 @@ class Runner extends Entity {
         else
             removeImage(runPumpingL);
     }
+    private void setRopeImage() {
+        if(climbing) {
+
+            removeImage(currentImage);
+            currentImage = null;
+
+            if(getDirection() == "RIGHT") {
+                if(currentImage != climbR) {
+                    removeImage(climbL);
+                    addImage(climbR);
+                    currentImage = climbR;
+                }
+
+            }
+            else if(getDirection() == "LEFT") {
+                if(currentImage != climbL) {
+                    removeImage(climbR);
+                    addImage(climbL);
+                    currentImage = climbL;
+                }
+            }
+
+        }
+    }
+    private void restoreFromClimbing() {
+        if(currentImage != runLEFT && currentImage != runRIGHT) {
+            removeImage(climbL);
+            removeImage(climbR);
+            if(getDirection() == "RIGHT") {
+                addImage(runRIGHT);
+                currentImage = runRIGHT;
+            }
+            else if(getDirection() == "LEFT"){
+                addImage(runLEFT);
+                currentImage = runLEFT;
+            }
+        }
+
+    }
 
     /**
      * @param delta the number of milliseconds since the last update
      */
-    public void update(final int delta) {
+    public void update(final int delta, int[][] Tmap) {
+        if(isClimbing(Tmap)) {
+            setRopeImage();
+        }
+        else if(!isClimbing(Tmap) ) {
+            restoreFromClimbing();
+        }
 //        System.out.println("CURRENT IMAGE: "+ currentImage.getName());
         if (this.timer <= 0) {
             translate(velocity.scale(delta));

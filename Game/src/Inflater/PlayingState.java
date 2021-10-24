@@ -105,7 +105,7 @@ class PlayingState extends BasicGameState {
 
         g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
         g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 120);
-        g.drawString("AIRBORNE: " + ig.runner.airborne(Tmap), 100, 140);
+        g.drawString("CLIMBING" + ig.runner.climbing, 100, 140);
 
     }
     private void checkGuardsTimer(ArrayList<Guard> guards) {
@@ -159,7 +159,7 @@ class PlayingState extends BasicGameState {
             System.out.println("GO TO NEXT LEVEL!");
             ig.enterState(InflaterGame.LEVEL2);
         }
-        ig.runner.update(delta);
+        ig.runner.update(delta, Tmap);
         ig.guards.forEach(guard -> guard.update(delta, Tmap, (int) ig.runner.getTilePosition(64, 64).getX(),
                 (int) ig.runner.getTilePosition(64, 64).getY()));
     }
