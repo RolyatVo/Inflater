@@ -173,14 +173,16 @@ class Runner extends Entity {
         y = getY();
 
         if (getDirection().compareTo("RIGHT") == 0) {
-            if (tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 0
+            if ((tmap[(int) ((y) / 64)][(int) ((x - 32) / 64f) + 1] != 0
+                    && tmap[(int) ((y+28f) / 64)][(int) ((x + 32) / 64f) - 1] != 0)
                     && tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 71
                     &&tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 139
                     && tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 186)
                 return true;
         }
         if (getDirection().compareTo("LEFT") == 0) {
-            if (tmap[(int) (y / 64)][(int) ((x + 32) / 64f) - 1] != 0
+            if (tmap[(int) ((y) / 64)][(int) ((x + 32) / 64f) - 1] != 0
+                    && tmap[(int) ((y+28f) / 64)][(int) ((x + 32) / 64f) - 1] != 0
                     && tmap[(int) (y / 64)][(int) ((x + 32) / 64f) - 1] != 71
                     && tmap[(int) (y / 64)][(int) ((x + 32) / 64f) - 1] != 139
                     && tmap[(int) (y / 64)][(int) ((x + 32) / 64f) - 1] != 186)
@@ -233,7 +235,7 @@ class Runner extends Entity {
      */
     private boolean guardIsRight(Guard guard) {
         if (this.getCoarseGrainedMaxX() + RANGE > guard.getCoarseGrainedMinX() &&
-                this.getX() < guard.getX())
+                this.getX() < guard.getX() && guard.getY() < this.getY() + 10 && guard.getY() > this.getY() - 10)
             return true;
         else
             return false;
@@ -247,7 +249,7 @@ class Runner extends Entity {
      */
     private boolean guardIsLeft(Guard guard) {
         if (this.getCoarseGrainedMinX() - RANGE < guard.getCoarseGrainedMaxX() &&
-                this.getX() > guard.getX())
+                this.getX() > guard.getX() && guard.getY() < this.getY() + 10 && guard.getY() > this.getY() - 10)
             return true;
         else
             return false;
