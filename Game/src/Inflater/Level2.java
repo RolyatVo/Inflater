@@ -186,7 +186,7 @@ class Level2 extends BasicGameState {
             ig.current_level +=1;
 
         }
-        ig.runner.update(delta);
+        ig.runner.update(delta, Tmap);
         ig.guards.forEach(guard -> guard.update(delta, Tmap, (int) ig.runner.getTilePosition(64, 64).getX(),
                 (int) ig.runner.getTilePosition(64, 64).getY()));
     }
