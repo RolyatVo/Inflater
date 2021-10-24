@@ -232,7 +232,7 @@ class Runner extends Entity {
         pY = (int) ((getY()-30) / 64);
 
         return (tmap[pY][pX] != 71 && tmap[pY][pX] != 0 && tmap[pY][pX] != 186 && tmap[pY][pX] != 139)
-                || (tmap[pY + 1][pX] != 0 && tmap[pY + 1][pX] != 71 && tmap[pY + 1][pX] != 73);
+                || (tmap[pY + 1][pX] != 0 && tmap[pY + 1][pX] != 71 && tmap[pY + 1][pX] != 73 && tmap[pY+1][pX] != 186 && tmap[pY+1][pX] != 139);
     }
 
     /**
