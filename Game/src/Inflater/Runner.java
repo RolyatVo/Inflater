@@ -101,7 +101,7 @@ class Runner extends Entity {
      */
     public void move(Input input, int[][] Tmap) {
         float PLAYER_SPEED = 0.20f;
-        if (input.isKeyDown(Input.KEY_DOWN) &&( isOnLadder(Tmap) || isOnRope(Tmap) )&& getCoarseGrainedMaxY() < 14 * 64) {
+        if (input.isKeyDown(Input.KEY_DOWN) && !isOnFloorLadder(Tmap) && ( isOnLadder(Tmap) || isOnRope(Tmap) )&& getCoarseGrainedMaxY() < 14 * 64) {
             setVelocity(new Vector(0, PLAYER_SPEED));
         } else if (input.isKeyDown(Input.KEY_UP) && isOnLadder(Tmap)) {
             setVelocity(new Vector(0, -PLAYER_SPEED));
@@ -225,6 +225,14 @@ class Runner extends Entity {
                 return true;
         }
         return false;
+    }
+    public boolean isOnFloorLadder(int [][] tmap) {
+        int pX, pY;
+        pX = (int) getX() / 64;
+        pY = (int) ((getY()-30) / 64);
+
+        return (tmap[pY][pX] != 71 && tmap[pY][pX] != 0 && tmap[pY][pX] != 186 && tmap[pY][pX] != 139)
+                || (tmap[pY + 1][pX] != 0 && tmap[pY + 1][pX] != 71 && tmap[pY + 1][pX] != 73);
     }
 
     /**

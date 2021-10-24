@@ -105,7 +105,7 @@ class PlayingState extends BasicGameState {
 
         g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
         g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 120);
-        g.drawString("CLIMBING" + ig.runner.climbing, 100, 140);
+        g.drawString("BOT LADDER " + ig.runner.isOnFloorLadder(Tmap), 100, 140);
 
     }
     private void checkGuardsTimer(ArrayList<Guard> guards) {
