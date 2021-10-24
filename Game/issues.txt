@@ -8,8 +8,7 @@
  [7] Give player a weapon to destroy the CPUs, have CPUs respawn at the top.
  [8] Adding more levels to the game.
  [9] Add rope movement
-
+[10] Fix bug that allows player to climb down into ground/platforms
   ====  [] Open Issues []  ====
 
-[10] Fix bug that allows player to climb down into ground/platforms
 [11] Add mechanic that will make the guards run away
