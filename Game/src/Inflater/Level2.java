@@ -9,10 +9,7 @@ import jig.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
@@ -29,6 +26,7 @@ import org.newdawn.slick.tiled.TiledMap;
  * Transitions To GameOverState
  */
 class Level2 extends BasicGameState {
+    private Image pathMarker;
     private TiledMap map;
     private final int tWidth = 20;
     private final int tHeight = 15;
@@ -39,7 +37,7 @@ class Level2 extends BasicGameState {
     private List<Node> path;
     private boolean DEBUG_FLAG = false;
     private int [] spawnPoint = new int[2];
-    private int numGuard = 0;
+    private int numGuard;
     private int guardTimer =0;
 
     @Override
@@ -48,7 +46,7 @@ class Level2 extends BasicGameState {
         InflaterGame ig = (InflaterGame) game;
         spawnPoint[0] = 2;
         spawnPoint[1] = 6;
-
+        pathMarker = new Image("Game/src/Inflater/Resources/Sprites/pathmarker.png");
         map = new TiledMap("Game/src/Inflater/Resources/Maps/Level2/Level2.tmx");
 
         int walls = map.getLayerIndex("Walls");
@@ -78,6 +76,7 @@ class Level2 extends BasicGameState {
         //reset game
         ig.coins.clear();
         ig.guards.clear();
+        ig.door = null;
         ig.runner.reset(2,14);
 
         container.setSoundOn(true);
@@ -94,6 +93,7 @@ class Level2 extends BasicGameState {
 
         ig.guards.add(new Guard(middle(11),middle(3)));
         ig.guards.add(new Guard(middle(4),middle(6)));
+        numGuard = ig.guards.size();
 
 
     }
@@ -111,6 +111,11 @@ class Level2 extends BasicGameState {
             for (int i = 1; i < tHeight; i++)
                 g.drawLine(0, map.getTileHeight() * i, pWidth, map.getTileHeight() * i);
 
+            for(int i =0; i< ig.guards.size(); i++) {
+                if(ig.guards.get(i).getPath() != null)
+                    ig.guards.get(i).getPath().forEach(node -> g.drawImage(pathMarker, node.getX() * 64, node.getY() * 64));
+            }
+
         }
         ig.coins.forEach(coin -> coin.render(g));
         if(ig.guards != null) {
@@ -126,9 +131,9 @@ class Level2 extends BasicGameState {
         ig.runner.setScale(4.0f);
 
 
-        g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
-        g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 120);
-        g.drawString("AIRBORNE: " + ig.runner.airborne(Tmap), 100, 140);
+//        g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
+//        g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 120);
+//        g.drawString("AIRBORNE: " + ig.runner.airborne(Tmap), 100, 140);
 
     }
     private float middle(int a) { return a * 64 -32; }
@@ -183,12 +188,11 @@ class Level2 extends BasicGameState {
         //Aft
         if ( (ig.door != null && ig.coins != null) && ig.door.collides(ig.runner) != null && ig.coins.isEmpty()) {
             System.out.println("GO TO NEXT LEVEL!");
-            ig.current_level +=1;
 
         }
         ig.runner.update(delta, Tmap);
         ig.guards.forEach(guard -> guard.update(delta, Tmap, (int) ig.runner.getTilePosition(64, 64).getX(),
-                (int) ig.runner.getTilePosition(64, 64).getY()));
+                (int) ig.runner.getTilePosition(64, 64).getY(), ig.guards.size() < numGuard));
     }
 
     @Override

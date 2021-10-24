@@ -15,6 +15,7 @@ class Guard extends Entity {
     private Vector velocity = new Vector(0, 0);
     private int counter;
     public int explodetimer;
+    public boolean scared;
     public boolean tazed;
     private AStar pathMap;
     private List<Node> path;
@@ -116,7 +117,8 @@ class Guard extends Entity {
         return (int) Math.floor(Math.random() * (max - min + 1) + min);
     }
 
-    public void update(final int delta, int[][] Tmap, int runnerX, int runnnerY) {
+    public void update(final int delta, int[][] Tmap, int runnerX, int runnerY, boolean scared) {
+
         if (this.counter > 0) {
             this.counter -= delta;
             if (this.counter <= 0) {
@@ -124,18 +126,24 @@ class Guard extends Entity {
                 setPathMap(new AStar(Tmap));
 //                pathMap.printPathMap();
 //                System.out.println(" ");
-                setPath(pathMap.aStarSearch(getTileX(), getTileY(), runnerX, runnnerY));
+                if(!this.scared) {
+                    List<Node> currentPath = scared ? pathMap.randomPath(getTileY(), getTileY(), runnerX, runnerY) : pathMap.aStarSearch(getTileX(), getTileY(), runnerX, runnerY);
+                    setPath(currentPath);
+                }
+
+
+                this.scared = scared;
                 this.counter = getRandomInt(2000, 1000);
                 //System.out.println("NEW PATH: " + this.counter);
-               // path.forEach(n -> System.out.print("(" + n.getX() + "," + n.getY() + ") "));
-               // System.out.println("");
+               //path.forEach(n -> System.out.print("(" + n.getX() + "," + n.getY() + ") "));
+                //System.out.println("");
             }
         }
         if (path != null) {
 
             if(!tazed) {
                 setVelocity(getNextInPath());
-                translate(velocity.scale(delta));
+                translate(velocity.scale(!this.scared ? delta : delta*0.7f));
             }
             else {
                 setVelocity(new Vector(0,0));
