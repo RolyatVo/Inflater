@@ -22,6 +22,14 @@ import java.util.ArrayList;
  *
  * level2
  * https://opengameart.org/content/2d-castle-platformer-starter-assets
+ *
+ * https://freesound.org/people/kwahmah_02/sounds/260614/
+ * https://freesound.org/people/MATRIXXX_/sounds/459145/
+ * https://freesound.org/people/jeckkech/sounds/391666/
+ * https://freesound.org/people/InspectorJ/sounds/394430/
+ * https://freesound.org/people/Volvion/sounds/265308/
+ * https://freesound.org/people/Samulis/sounds/197780/
+ *
  */
 public class InflaterGame extends StateBasedGame {
 

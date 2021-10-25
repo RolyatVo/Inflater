@@ -10,6 +10,7 @@
  [9] Add rope movement
 [10] Fix bug that allows player to climb down into ground/platforms
 [11] Add mechanic that will make the guards run away
+[12] Add sounds for movement and others
   ====  [] Open Issues []  ====
 
 [12] Add sounds for movement and others
