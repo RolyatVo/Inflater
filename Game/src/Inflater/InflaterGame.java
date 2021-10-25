@@ -42,6 +42,7 @@ public class InflaterGame extends StateBasedGame {
     //public static final String PLAYER_RSC = "Inflater/Resources/Sprites/testplayer.png";
     public static final String COIN_RSC = "Inflater/Resources/Sprites/star_coin_normal_64x64.png";
     public static final String OPEN_DOOR_RSC = "Inflater/Resources/Sprites/OpenDoor.png";
+    public static final String HEART_RSC = "Inflater/Resources/Sprites/heart.png";
 
     public final int ScreenWidth;
     public final int ScreenHeight;
@@ -54,6 +55,7 @@ public class InflaterGame extends StateBasedGame {
     Door door;
     ArrayList<Coin> coins;
     ArrayList<Guard> guards;
+    ArrayList<heart> hearts;
 
     /**
      * Create the BounceGame frame, saving the width and height for later use.
@@ -99,10 +101,12 @@ public class InflaterGame extends StateBasedGame {
 
         ResourceManager.loadImage(COIN_RSC);
         ResourceManager.loadImage(OPEN_DOOR_RSC);
+        ResourceManager.loadImage(HEART_RSC);
 
         runner = new Runner(2 * 64 - 32, 14 * 64 - 32, 0f, 0f);
         coins = new ArrayList<Coin>();
         guards = new ArrayList<Guard>();
+        hearts = new ArrayList<heart>();
 
     }
 
@@ -110,7 +114,7 @@ public class InflaterGame extends StateBasedGame {
         AppGameContainer app;
         try {
             app = new AppGameContainer(new InflaterGame("Inflater", 900, 700));
-            app.setDisplayMode(768, 576, false);
+            app.setDisplayMode(768, 626, false);
             app.setVSync(true);
             app.start();
         } catch (SlickException e) {

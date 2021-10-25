@@ -76,6 +76,7 @@ class Level2 extends BasicGameState {
             System.out.println();
         }
         //reset game
+        ig.hearts.clear();
         ig.coins.clear();
         ig.guards.clear();
         ig.door = null;
@@ -96,6 +97,9 @@ class Level2 extends BasicGameState {
         ig.guards.add(new Guard(middle(11),middle(3)));
         ig.guards.add(new Guard(middle(4),middle(6)));
         numGuard = ig.guards.size();
+        ig.hearts.add(new heart(1 * 64-32, 16*64-32));
+        ig.hearts.add(new heart(2 * 64-32, 16*64-32));
+        ig.hearts.add(new heart(3 * 64-32, 16*64-32));
 
 
     }
@@ -131,6 +135,7 @@ class Level2 extends BasicGameState {
         }
         ig.runner.render(g);
         ig.runner.setScale(4.0f);
+        ig.hearts.forEach(heart -> heart.render(g));
 
 
 //        g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
@@ -146,6 +151,11 @@ class Level2 extends BasicGameState {
                 pop.play();
             }
         }
+    }
+    private void reset(ArrayList<Guard> guards) throws SlickException{
+        guards.clear();
+        guards.add(new Guard(middle(11),middle(3)));
+        guards.add(new Guard(middle(4),middle(6)));
     }
     private void spawnGuard(ArrayList<Guard> guards) throws SlickException{
         guards.add(new Guard(spawnPoint[0] * 64 - 32, spawnPoint[1] * 64 - 32));
@@ -174,6 +184,13 @@ class Level2 extends BasicGameState {
                 ig.coins.remove(i);
             }
         }
+        for(int i =0; i < ig.guards.size(); i++) {
+            if(ig.guards.get(i).collides(ig.runner)!= null) {
+                ig.hearts.remove(ig.hearts.size()-1);
+                ig.runner.reset(2,14);
+                reset(ig.guards);
+            }
+        }
 
 
         if(ig.guards.size() < numGuard) {
@@ -191,7 +208,9 @@ class Level2 extends BasicGameState {
         //Aft
         if ( (ig.door != null && ig.coins != null) && ig.door.collides(ig.runner) != null && ig.coins.isEmpty()) {
             System.out.println("GO TO NEXT LEVEL!");
-
+        }
+        if(ig.hearts.isEmpty()) {
+            ig.enterState(InflaterGame.GAMEOVERSTATE);
         }
         ig.runner.update(delta, Tmap);
         ig.guards.forEach(guard -> guard.update(delta, Tmap, (int) ig.runner.getTilePosition(64, 64).getX(),
