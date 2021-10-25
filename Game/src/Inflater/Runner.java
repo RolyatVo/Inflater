@@ -3,15 +3,16 @@ package Inflater;
 import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.*;
 
 import java.util.ArrayList;
 
 class Runner extends Entity {
     private final SpriteSheet runguy = new SpriteSheet("Inflater/Resources/Sprites/loderunner.png", 16, 16);
+    private final Sound walking = new Sound("Game/src/Inflater/Resources/sounds/197780__samulis__footstep-on-stone-3.wav");
+    private final Sound rope = new Sound("Game/src/Inflater/Resources/sounds/394430__inspectorj__bamboo-swing-b18.wav");
+    private final Sound climbingSound = new Sound("Game/src/Inflater/Resources/sounds/391666__jeckkech__swim.wav");
+    private final Sound pump = new Sound("Game/src/Inflater/Resources/sounds/459145__matrixxx__retro-pew-shot.wav");
     private final Image runLEFT = runguy.getSubImage(0, 0, 16, 16);
     private final Image runRIGHT = runLEFT.getFlippedCopy(true, false);
     private final Image runPumpingL = runguy.getSubImage(0, 32, 16, 16);
@@ -102,10 +103,16 @@ class Runner extends Entity {
     public void move(Input input, int[][] Tmap) {
         float PLAYER_SPEED = 0.20f;
         if (input.isKeyDown(Input.KEY_DOWN) && !isOnFloorLadder(Tmap) && ( isOnLadder(Tmap) || isOnRope(Tmap) )&& getCoarseGrainedMaxY() < 14 * 64) {
+            if(isOnLadder(Tmap) && !climbingSound.playing()) { climbingSound.play(1f, 0.2f);}
             setVelocity(new Vector(0, PLAYER_SPEED));
         } else if (input.isKeyDown(Input.KEY_UP) && isOnLadder(Tmap)) {
+            if(isOnLadder(Tmap) && !climbingSound.playing()) { climbingSound.play(2,0.2f);}
             setVelocity(new Vector(0, -PLAYER_SPEED));
         } else if (input.isKeyDown(Input.KEY_RIGHT)) {
+            if(!walking.playing() && !climbing && !isOnLadder(Tmap))
+                walking.play(2,0.5f);
+
+            if(isClimbing(Tmap) && !rope.playing()) { rope.play(2,0.5f); }
             if (getDirection() != "RIGHT") {
                 flipDirection();
             }
@@ -115,6 +122,9 @@ class Runner extends Entity {
                 setVelocity(new Vector(PLAYER_SPEED, 0));
 
         } else if (input.isKeyDown(Input.KEY_LEFT)) {
+            if(!walking.playing() && !climbing && !isOnLadder(Tmap))
+                walking.play(2,0.5f);
+            if(isClimbing(Tmap) && !rope.playing()) { rope.play(2,0.5f); }
             if (getDirection() != "LEFT") {
                 flipDirection();
             }
@@ -273,6 +283,7 @@ class Runner extends Entity {
         //TODO: Implement taze functionality into pumpDirection change the image when the player pumps
         for (int i = 0; i < guards.size(); i++) {
             if (guardIsRight(guards.get(i))) {
+                if(!pump.playing()) { pump.play(0.6f, 0.1f); }
                 removeImage(currentImage);
                 addImage(runPumpingR);
                 this.tazing = "RIGHT";
@@ -280,6 +291,7 @@ class Runner extends Entity {
                 guards.get(i).tazed(delta);
                 break;
             } else if (guardIsLeft(guards.get(i))) {
+                if(!pump.playing()) { pump.play(0.6f,0.1f); }
                 removeImage(currentImage);
                 addImage(runPumpingL);
                 this.tazing = "LEFT";
