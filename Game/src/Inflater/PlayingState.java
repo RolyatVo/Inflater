@@ -5,14 +5,10 @@ import jig.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
-import org.newdawn.slick.Image;
 
 
 /**
@@ -26,6 +22,7 @@ import org.newdawn.slick.Image;
  * Transitions To GameOverState
  */
 class PlayingState extends BasicGameState {
+    private Sound gameSound;
     private Image pathMarker;
     private TiledMap map;
     private final int tWidth = 20;
@@ -44,6 +41,7 @@ class PlayingState extends BasicGameState {
         InflaterGame ig = (InflaterGame) game;
         spawnPoint[0] = 2;
         spawnPoint[1] = 7;
+        gameSound = new Sound("Game/src/Inflater/Resources/sounds/265308__volvion__8-bit-bossfight.wav");
         map = new TiledMap("Game/src/Inflater/Resources/Maps/Level1/Level1.tmx");
 
         pathMarker = new Image("Game/src/Inflater/Resources/Sprites/pathmarker.png");
@@ -66,6 +64,7 @@ class PlayingState extends BasicGameState {
         ig.guards.clear();
         ig.door = null;
         ig.runner.reset(2,14);
+       // gameSound.loop(1,0.5f);
         //Printing out 2d array of map
 //        for (int y = 0; y < tHeight; y++) {
 //            for (int x = 0; x < tWidth; x++) {
@@ -132,6 +131,8 @@ class PlayingState extends BasicGameState {
     @Override
     public void update(GameContainer container, StateBasedGame game,
                        int delta) throws SlickException {
+        if(!gameSound.playing())
+            gameSound.play(1,0.05f);
 
         Input input = container.getInput();
         InflaterGame ig = (InflaterGame) game;
