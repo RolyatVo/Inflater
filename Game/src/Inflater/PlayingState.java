@@ -35,6 +35,8 @@ class PlayingState extends BasicGameState {
     private int numGuard;
     private int guardTimer =0;
 
+    private Sound pop;
+
     @Override
     public void init(GameContainer container, StateBasedGame game)
             throws SlickException {
@@ -43,6 +45,7 @@ class PlayingState extends BasicGameState {
         spawnPoint[1] = 7;
         gameSound = new Sound("Game/src/Inflater/Resources/sounds/265308__volvion__8-bit-bossfight.wav");
         map = new TiledMap("Game/src/Inflater/Resources/Maps/Level1/Level1.tmx");
+        pop = new Sound("Game/src/Inflater/Resources/sounds/260614__kwahmah-02__pop.wav");
 
         pathMarker = new Image("Game/src/Inflater/Resources/Sprites/pathmarker.png");
         int walls = map.getLayerIndex("Walls");
@@ -120,6 +123,7 @@ class PlayingState extends BasicGameState {
     private void checkGuardsTimer(ArrayList<Guard> guards) {
         for(int i =0; i < guards.size(); i++ ) {
             if(guards.get(i).explodetimer > 2500) {
+                pop.play();
                 guards.remove(i);
             }
         }

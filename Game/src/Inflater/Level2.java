@@ -39,6 +39,7 @@ class Level2 extends BasicGameState {
     private int [] spawnPoint = new int[2];
     private int numGuard;
     private int guardTimer =0;
+    private Sound pop;
 
     @Override
     public void init(GameContainer container, StateBasedGame game)
@@ -46,6 +47,7 @@ class Level2 extends BasicGameState {
         InflaterGame ig = (InflaterGame) game;
         spawnPoint[0] = 2;
         spawnPoint[1] = 6;
+        pop = new Sound("Game/src/Inflater/Resources/sounds/260614__kwahmah-02__pop.wav");
         pathMarker = new Image("Game/src/Inflater/Resources/Sprites/pathmarker.png");
         map = new TiledMap("Game/src/Inflater/Resources/Maps/Level2/Level2.tmx");
 
@@ -141,6 +143,7 @@ class Level2 extends BasicGameState {
         for(int i =0; i < guards.size(); i++ ) {
             if(guards.get(i).explodetimer > 2500) {
                 guards.remove(i);
+                pop.play();
             }
         }
     }
