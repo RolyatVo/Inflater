@@ -3,7 +3,6 @@ package Inflater;
 import jig.Vector;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
@@ -46,7 +45,6 @@ class PlayingState extends BasicGameState {
         gameSound = new Sound("Game/src/Inflater/Resources/sounds/265308__volvion__8-bit-bossfight.wav");
         map = new TiledMap("Game/src/Inflater/Resources/Maps/Level1/Level1.tmx");
         pop = new Sound("Game/src/Inflater/Resources/sounds/260614__kwahmah-02__pop.wav");
-
         pathMarker = new Image("Game/src/Inflater/Resources/Sprites/pathmarker.png");
         int walls = map.getLayerIndex("Walls");
         for (int y = 0; y < tHeight; y++) {
@@ -63,6 +61,7 @@ class PlayingState extends BasicGameState {
     public void enter(GameContainer container, StateBasedGame game) throws SlickException{
         InflaterGame ig = (InflaterGame) game;
         //reset level
+        ig.hearts.clear();
         ig.coins.clear();
         ig.guards.clear();
         ig.door = null;
@@ -82,6 +81,11 @@ class PlayingState extends BasicGameState {
         ig.guards.add(new Guard(19 * 64 - 32, 7 * 64 - 32));
         ig.guards.add(new Guard(3 * 64 - 32 , 7 * 64 - 32));
         numGuard = ig.guards.size();
+
+        ig.hearts.add(new heart(1 * 64-32, 16*64-32));
+        ig.hearts.add(new heart(2 * 64-32, 16*64-32));
+        ig.hearts.add(new heart(3 * 64-32, 16*64-32));
+
 
         container.setSoundOn(true);
     }
@@ -115,10 +119,11 @@ class PlayingState extends BasicGameState {
         ig.runner.setScale(4.0f);
 
 
+        ig.hearts.forEach(heart -> heart.render(g));
+
+
 //        g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
 //        g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 120);
-//        g.drawString("BOT LADDER " + ig.runner.isOnFloorLadder(Tmap), 100, 140);
-
     }
     private void checkGuardsTimer(ArrayList<Guard> guards) {
         for(int i =0; i < guards.size(); i++ ) {
@@ -128,6 +133,12 @@ class PlayingState extends BasicGameState {
             }
         }
     }
+    private void reset(ArrayList<Guard> guards) throws SlickException{
+        guards.clear();
+        guards.add(new Guard(19 * 64 - 32, 7 * 64 - 32));
+        guards.add(new Guard(3 * 64 - 32 , 7 * 64 - 32));
+    }
+
     private void spawnGuard(ArrayList<Guard> guards) throws SlickException{
         guards.add(new Guard(spawnPoint[0] * 64 - 32, spawnPoint[1] * 64 - 32));
     }
@@ -157,6 +168,13 @@ class PlayingState extends BasicGameState {
                 ig.coins.remove(i);
             }
         }
+        for(int i =0; i < ig.guards.size(); i++) {
+            if(ig.guards.get(i).collides(ig.runner)!= null) {
+                ig.hearts.remove(ig.hearts.size()-1);
+                ig.runner.reset(2,14);
+                reset(ig.guards);
+            }
+        }
 
 
         if(ig.guards.size() < numGuard) {
@@ -176,6 +194,9 @@ class PlayingState extends BasicGameState {
                 || input.isKeyPressed(Input.KEY_2)) {
             System.out.println("GO TO NEXT LEVEL!");
             ig.enterState(InflaterGame.LEVEL2);
+        }
+        if(ig.hearts.isEmpty()) {
+            ig.enterState(InflaterGame.GAMEOVERSTATE);
         }
         ig.runner.update(delta, Tmap);
         ig.guards.forEach(guard -> guard.update(delta, Tmap, (int) ig.runner.getTilePosition(64, 64).getX(),

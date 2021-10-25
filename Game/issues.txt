@@ -11,9 +11,9 @@
 [10] Fix bug that allows player to climb down into ground/platforms
 [11] Add mechanic that will make the guards run away
 [12] Add sounds for movement and others
+[13] Implement lives system
+
   ====  [] Open Issues []  ====
 
-[12] Add sounds for movement and others
-[13] Implement lives system
 [14] Create start and end screen 
 [15] Add animations for movement
