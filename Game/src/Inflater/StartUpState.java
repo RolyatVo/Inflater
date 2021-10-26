@@ -16,10 +16,12 @@ import org.newdawn.slick.tiled.TiledMap;
  * Transitions To PlayingState
  */
 class StartUpState extends BasicGameState {
+	private Image startup;
 	private TiledMap map;
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
+		startup = new Image("Game/src/Inflater/Resources/Sprites/start_screen.png");
 	}
 	
 	@Override
@@ -32,6 +34,7 @@ class StartUpState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
+		startup.draw(0,0);
 
 	}
 

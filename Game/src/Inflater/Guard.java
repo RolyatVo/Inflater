@@ -127,7 +127,7 @@ class Guard extends Entity {
 //                pathMap.printPathMap();
 //                System.out.println(" ");
                 if(!this.scared) {
-                    List<Node> currentPath = scared ? pathMap.randomPath(getTileY(), getTileY(), runnerX, runnerY) : pathMap.aStarSearch(getTileX(), getTileY(), runnerX, runnerY);
+                    List<Node> currentPath = scared ? pathMap.randomPath((int)(this.getX()/64), (int)(this.getX()/64), runnerX, runnerY) : pathMap.aStarSearch(getTileX(), getTileY(), runnerX, runnerY);
                     setPath(currentPath);
                 }
 

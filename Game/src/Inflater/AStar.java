@@ -69,8 +69,6 @@ public class AStar {
     public List<Node> randomPath(int startX, int startY, int destX, int destY) {
         if(startX < 0 || startX > 19 || startY < 0 || startY > 14) { return null; }
         Node start = pathMap[startY][startX];
-        pathMap[destY][destX].setWalkable(false);
-        pathMap[destY][destX].setG(99f);
         Node dest = getRandomNode(destX, destY);
 
         PriorityQueue<Node> open = new PriorityQueue<>();

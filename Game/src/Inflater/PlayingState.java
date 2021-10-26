@@ -127,7 +127,7 @@ class PlayingState extends BasicGameState {
     }
     private void checkGuardsTimer(ArrayList<Guard> guards) {
         for(int i =0; i < guards.size(); i++ ) {
-            if(guards.get(i).explodetimer > 2500) {
+            if(guards.get(i).explodetimer > 1000) {
                 pop.play();
                 guards.remove(i);
             }
@@ -169,7 +169,7 @@ class PlayingState extends BasicGameState {
             }
         }
         for(int i =0; i < ig.guards.size(); i++) {
-            if(ig.guards.get(i).collides(ig.runner)!= null) {
+            if(ig.guards.get(i).collides(ig.runner)!= null && !ig.guards.get(i).tazed) {
                 ig.hearts.remove(ig.hearts.size()-1);
                 ig.runner.reset(2,14);
                 reset(ig.guards);
@@ -178,7 +178,7 @@ class PlayingState extends BasicGameState {
 
 
         if(ig.guards.size() < numGuard) {
-            if(guardTimer > 4000) {
+            if(guardTimer > 3000) {
                 spawnGuard(ig.guards);
                 guardTimer = 0;
             }
