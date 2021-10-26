@@ -12,6 +12,8 @@ import java.util.List;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.EmptyTransition;
+import org.newdawn.slick.state.transition.HorizontalSplitTransition;
 import org.newdawn.slick.tiled.TiledMap;
 
 
@@ -208,6 +210,7 @@ class Level2 extends BasicGameState {
         //Aft
         if ( (ig.door != null && ig.coins != null) && ig.door.collides(ig.runner) != null && ig.coins.isEmpty()) {
             System.out.println("GO TO NEXT LEVEL!");
+            ig.enterState(InflaterGame.WINSTATE, new EmptyTransition(), new HorizontalSplitTransition());
         }
         if(ig.hearts.isEmpty()) {
             ig.enterState(InflaterGame.GAMEOVERSTATE);
