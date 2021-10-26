@@ -12,6 +12,8 @@ import java.util.List;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.EmptyTransition;
+import org.newdawn.slick.state.transition.HorizontalSplitTransition;
 import org.newdawn.slick.tiled.TiledMap;
 
 
@@ -45,8 +47,8 @@ class Level2 extends BasicGameState {
     public void init(GameContainer container, StateBasedGame game)
             throws SlickException {
         InflaterGame ig = (InflaterGame) game;
-        spawnPoint[0] = 2;
-        spawnPoint[1] = 6;
+        spawnPoint[0] = 19;
+        spawnPoint[1] = 2;
         pop = new Sound("Game/src/Inflater/Resources/sounds/260614__kwahmah-02__pop.wav");
         pathMarker = new Image("Game/src/Inflater/Resources/Sprites/pathmarker.png");
         map = new TiledMap("Game/src/Inflater/Resources/Maps/Level2/Level2.tmx");
@@ -94,7 +96,7 @@ class Level2 extends BasicGameState {
 
         ig.door = new Door(middle(19), middle(14));
 
-        ig.guards.add(new Guard(middle(11),middle(3)));
+        ig.guards.add(new Guard(middle(14),middle(3)));
         ig.guards.add(new Guard(middle(4),middle(6)));
         numGuard = ig.guards.size();
         ig.hearts.add(new heart(1 * 64-32, 16*64-32));
@@ -146,7 +148,7 @@ class Level2 extends BasicGameState {
     private float middle(int a) { return a * 64 -32; }
     private void checkGuardsTimer(ArrayList<Guard> guards) {
         for(int i =0; i < guards.size(); i++ ) {
-            if(guards.get(i).explodetimer > 2500) {
+            if(guards.get(i).explodetimer > 1000) {
                 guards.remove(i);
                 pop.play();
             }
@@ -185,7 +187,7 @@ class Level2 extends BasicGameState {
             }
         }
         for(int i =0; i < ig.guards.size(); i++) {
-            if(ig.guards.get(i).collides(ig.runner)!= null) {
+            if(ig.guards.get(i).collides(ig.runner)!= null && !ig.guards.get(i).tazed) {
                 ig.hearts.remove(ig.hearts.size()-1);
                 ig.runner.reset(2,14);
                 reset(ig.guards);
@@ -194,7 +196,7 @@ class Level2 extends BasicGameState {
 
 
         if(ig.guards.size() < numGuard) {
-            if(guardTimer > 4000) {
+            if(guardTimer > 3000) {
                 spawnGuard(ig.guards);
                 guardTimer = 0;
             }
@@ -208,6 +210,7 @@ class Level2 extends BasicGameState {
         //Aft
         if ( (ig.door != null && ig.coins != null) && ig.door.collides(ig.runner) != null && ig.coins.isEmpty()) {
             System.out.println("GO TO NEXT LEVEL!");
+            ig.enterState(InflaterGame.WINSTATE, new EmptyTransition(), new HorizontalSplitTransition());
         }
         if(ig.hearts.isEmpty()) {
             ig.enterState(InflaterGame.GAMEOVERSTATE);

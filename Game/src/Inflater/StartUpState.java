@@ -3,6 +3,7 @@ package Inflater;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.*;
 import org.newdawn.slick.tiled.TiledMap;
 
 /**
@@ -16,10 +17,12 @@ import org.newdawn.slick.tiled.TiledMap;
  * Transitions To PlayingState
  */
 class StartUpState extends BasicGameState {
+	private Image startup;
 	private TiledMap map;
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
+		startup = new Image("Game/src/Inflater/Resources/Sprites/start_screen.png");
 	}
 	
 	@Override
@@ -32,6 +35,7 @@ class StartUpState extends BasicGameState {
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
 			Graphics g) throws SlickException {
+		startup.draw(0,0);
 
 	}
 
@@ -44,7 +48,7 @@ class StartUpState extends BasicGameState {
 		if (input.isKeyDown(Input.KEY_2)) bg.enterState(InflaterGame.LEVEL2);
 
 		if (input.isKeyDown(Input.KEY_SPACE))
-			bg.enterState(InflaterGame.PLAYINGSTATE);
+			bg.enterState(InflaterGame.PLAYINGSTATE, new EmptyTransition(), new BlobbyTransition());
 
 	}
 

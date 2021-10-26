@@ -5,6 +5,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.state.transition.HorizontalSplitTransition;
 
@@ -19,6 +20,7 @@ import org.newdawn.slick.state.transition.HorizontalSplitTransition;
  * Transitions To StartUpState
  */
 class GameOverState extends BasicGameState {
+	private Image deathScreen;
 	
 
 	private int timer;
@@ -26,6 +28,7 @@ class GameOverState extends BasicGameState {
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
+		deathScreen = new Image("Game/src/Inflater/Resources/Sprites/Death_screen.png");
 	}
 	
 	@Override
@@ -38,7 +41,7 @@ class GameOverState extends BasicGameState {
 			Graphics g) throws SlickException {
 
 		InflaterGame bg = (InflaterGame)game;
-
+		deathScreen.draw(0,0);
 
 	}
 
