@@ -3,6 +3,7 @@ package Inflater;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.*;
 import org.newdawn.slick.tiled.TiledMap;
 
 /**
@@ -47,7 +48,7 @@ class StartUpState extends BasicGameState {
 		if (input.isKeyDown(Input.KEY_2)) bg.enterState(InflaterGame.LEVEL2);
 
 		if (input.isKeyDown(Input.KEY_SPACE))
-			bg.enterState(InflaterGame.PLAYINGSTATE);
+			bg.enterState(InflaterGame.PLAYINGSTATE, new EmptyTransition(), new BlobbyTransition());
 
 	}
 

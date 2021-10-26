@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.EmptyTransition;
+import org.newdawn.slick.state.transition.HorizontalSplitTransition;
+import org.newdawn.slick.state.transition.SelectTransition;
 import org.newdawn.slick.tiled.TiledMap;
 
 
@@ -193,7 +196,7 @@ class PlayingState extends BasicGameState {
         if (((ig.door != null && ig.coins != null) && ig.door.collides(ig.runner) != null && ig.coins.isEmpty())
                 || input.isKeyPressed(Input.KEY_2)) {
             System.out.println("GO TO NEXT LEVEL!");
-            ig.enterState(InflaterGame.LEVEL2);
+            ig.enterState(InflaterGame.LEVEL2, new EmptyTransition(), new SelectTransition());
         }
         if(ig.hearts.isEmpty()) {
             ig.enterState(InflaterGame.GAMEOVERSTATE);
