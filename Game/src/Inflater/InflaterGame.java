@@ -45,6 +45,7 @@ public class InflaterGame extends StateBasedGame {
     public static final String OPEN_DOOR_RSC = "Inflater/Resources/Sprites/OpenDoor.png";
     public static final String HEART_RSC = "Inflater/Resources/Sprites/heart.png";
     public static final String LODERUNNER_RSC = "Inflater/Resources/Sprites/loderunner.png";
+    public static final String SPINNING_COIN_RSC = "Inflater/Resources/Sprites/coin32.png";
 //    public static final String a = "";
 //    public static final String a = "";
 //    public static final String a = "";
@@ -116,6 +117,9 @@ public class InflaterGame extends StateBasedGame {
         ResourceManager.loadImage(OPEN_DOOR_RSC);
         ResourceManager.loadImage(HEART_RSC);
         ResourceManager.loadImage(LODERUNNER_RSC);
+        ResourceManager.loadImage(SPINNING_COIN_RSC);
+
+
 
         runner = new Runner(2 * 64 - 32, 14 * 64 - 32, 0f, 0f);
         coins = new ArrayList<Coin>();
