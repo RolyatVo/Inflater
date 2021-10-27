@@ -8,20 +8,23 @@ import org.newdawn.slick.*;
 import java.util.ArrayList;
 
 class Runner extends Entity {
-    private final SpriteSheet runguy = new SpriteSheet("Inflater/Resources/Sprites/loderunner.png", 16, 16);
+    private final SpriteSheet runguy;
     private final Sound walking = new Sound("Game/src/Inflater/Resources/sounds/197780__samulis__footstep-on-stone-3.wav");
     private final Sound rope = new Sound("Game/src/Inflater/Resources/sounds/394430__inspectorj__bamboo-swing-b18.wav");
     private final Sound climbingSound = new Sound("Game/src/Inflater/Resources/sounds/391666__jeckkech__swim.wav");
     private final Sound pump = new Sound("Game/src/Inflater/Resources/sounds/459145__matrixxx__retro-pew-shot.wav");
-    private final Image runLEFT = runguy.getSubImage(0, 0, 16, 16);
-    private final Image runRIGHT = runLEFT.getFlippedCopy(true, false);
-    private final Image runPumpingL = runguy.getSubImage(0, 32, 16, 16);
-    private final Image runPumpingR = runPumpingL.getFlippedCopy(true, false);
-    private final Image climbL = runguy.getSubImage(4 * 16, 16, 16, 16);
-    private final Image climbR = climbL.getFlippedCopy(true,false);
+    private final Image runLEFT;
+    //private final Image runRIGHT = runLEFT.getFlippedCopy(true, false);
+   // private final Image runPumpingL = runguy.getSubImage(0, 32, 16, 16);
+    //private final Image runPumpingR = runPumpingL.getFlippedCopy(true, false);
+    //private final Image climbL = runguy.getSubImage(4 * 16, 16, 16, 16);
+    //private final Image climbR = climbL.getFlippedCopy(true,false);
 
+
+    private Animation walkingRight, walkingLeft, climbingLadder, ropeLeft, ropeRight, tazingLeft, tazingRight;
 
     private Image currentImage;
+    private Animation currentAnimation;
     public String tazing;
     public boolean climbing;
     private Vector velocity, initalV;
@@ -33,15 +36,36 @@ class Runner extends Entity {
 
     public Runner(final float x, final float y, final float vx, final float vy) throws SlickException {
         super(x, y);
-        runLEFT.setName("RUN LEFT");
-        runRIGHT.setName("RUN RIGHT");
+
+        runguy = new SpriteSheet("Inflater/Resources/Sprites/loderunner.png", 16, 16);
+        runLEFT = runguy.getSubImage(0, 0, 16, 16);
         addImageWithBoundingBox(runLEFT);
         currentImage = runLEFT;
+
         velocity = new Vector(vx, vy);
         initalV = velocity.copy();
         countdown = 0;
         direction = "LEFT";
         timer = 0;
+
+        walkingLeft = new Animation(runguy, 0,0, 3,0, true, 300, true);
+        walkingRight = flippedAnimation(walkingLeft);
+
+        climbingLadder = new Animation(runguy, 0,1,3,1, true, 300, true);
+        ropeLeft = new Animation(runguy, 4,1,7,1, true, 300, true);
+        ropeRight = flippedAnimation(ropeLeft);
+
+        tazingLeft = new Animation(runguy,0,2,1,2,true,400,true);
+        tazingRight = flippedAnimation(tazingLeft);
+
+    }
+    private Animation flippedAnimation(Animation animation) {
+        Image[] reversed = new Image[animation.getFrameCount()];
+
+        for(int i=0; i < animation.getFrameCount(); i++) {
+            reversed[i] = animation.getImage(i).getFlippedCopy(true,false);
+        }
+        return new Animation(reversed,300,true);
     }
 
     public void setVelocity(final Vector v) {
@@ -103,10 +127,15 @@ class Runner extends Entity {
     public void move(Input input, int[][] Tmap) {
         float PLAYER_SPEED = 0.20f;
         if (input.isKeyDown(Input.KEY_DOWN) && !isOnFloorLadder(Tmap) && ( isOnLadder(Tmap) || isOnRope(Tmap) )&& getCoarseGrainedMaxY() < 14 * 64) {
-            if(isOnLadder(Tmap) && !climbingSound.playing()) { climbingSound.play(1f, 0.2f);}
+            if(isOnLadder(Tmap) && !climbingSound.playing()) {
+                climbingSound.play(1f, 0.2f);
+            }
+            setAnimation(direction, climbingLadder);
             setVelocity(new Vector(0, PLAYER_SPEED));
-        } else if (input.isKeyDown(Input.KEY_UP) && isOnLadder(Tmap)) {
+        }
+        else if (input.isKeyDown(Input.KEY_UP) && isOnLadder(Tmap)) {
             if(isOnLadder(Tmap) && !climbingSound.playing()) { climbingSound.play(2,0.2f);}
+            setAnimation(direction, climbingLadder);
             setVelocity(new Vector(0, -PLAYER_SPEED));
         } else if (input.isKeyDown(Input.KEY_RIGHT)) {
             if(!walking.playing() && !climbing && !isOnLadder(Tmap))
@@ -114,25 +143,31 @@ class Runner extends Entity {
 
             if(isClimbing(Tmap) && !rope.playing()) { rope.play(2,0.5f); }
             if (getDirection() != "RIGHT") {
-                flipDirection();
+//                flipDirection();
             }
             if (isDirectionBlocked(Tmap)) {
                 setVelocity(new Vector(0, 0));
-            } else
+            } else {
+                setAnimationDirection("RIGHT", Tmap);
                 setVelocity(new Vector(PLAYER_SPEED, 0));
+            }
 
         } else if (input.isKeyDown(Input.KEY_LEFT)) {
             if(!walking.playing() && !climbing && !isOnLadder(Tmap))
                 walking.play(2,0.5f);
             if(isClimbing(Tmap) && !rope.playing()) { rope.play(2,0.5f); }
             if (getDirection() != "LEFT") {
-                flipDirection();
+//                flipDirection();
             }
             if (isDirectionBlocked(Tmap)) {
                 setVelocity(new Vector(0, 0));
-            } else
+            } else {
+                setAnimationDirection("LEFT", Tmap);
                 setVelocity(new Vector(-PLAYER_SPEED, 0));
+            }
         } else {
+            currentAnimation.stop();
+            currentAnimation.setCurrentFrame(1);
             setVelocity(new Vector(0, 0));
         }
 
@@ -142,33 +177,75 @@ class Runner extends Entity {
             setVelocity(new Vector(this.velocity.getX(), this.velocity.getY() + GRAVITY));
     }
 
+    private void setAnimation(String direction, Animation animation) {
+        this.direction = direction;
+        removeImage(currentImage);
+        removeAnimation(currentAnimation);
+
+        addAnimation(animation);
+        currentAnimation = animation;
+        animation.start();
+    }
+
+
+    private void setAnimationDirection(String direction, int [][] Tmap) {
+        this.direction = direction;
+        removeImage(currentImage);
+        removeAnimation(currentAnimation);
+
+        if(direction == "RIGHT") {
+            if(isClimbing(Tmap)) {
+                addAnimation(ropeRight);
+                currentAnimation = ropeRight;
+                ropeRight.start();
+            }
+            else {
+                addAnimation(walkingRight);
+                currentAnimation = walkingRight;
+                walkingRight.start();
+            }
+        }
+        else {
+            if(isClimbing(Tmap)) {
+                addAnimation(ropeLeft);
+                currentAnimation = ropeLeft;
+                ropeLeft.start();
+            }
+            else {
+                addAnimation(walkingLeft);
+                currentAnimation = walkingLeft;
+                walkingLeft.start();
+            }
+        }
+    }
+
     /**
      * Flip and set the direction of the player.
      */
-    public void flipDirection() {
-        flipImage();
-        if (direction == "RIGHT") {
-            setDirection("LEFT");
-        } else {
-            setDirection("RIGHT");
-        }
-    }
+//    public void flipDirection() {
+//        flipImage();
+//        if (direction == "RIGHT") {
+//            setDirection("LEFT");
+//        } else {
+//            setDirection("RIGHT");
+//        }
+//    }
 
     /**
      * Flip image of the player depending on which way they are facing.
      */
-    public void flipImage() {
-        if (direction == "RIGHT") {
-            removeImage(runRIGHT);
-            addImage(runLEFT);
-            this.currentImage = runLEFT;
-        } else {
-            removeImage(runLEFT);
-            addImage(runRIGHT);
-            this.currentImage = runRIGHT;
-        }
-
-    }
+//    public void flipImage() {
+//        if (direction == "RIGHT") {
+//            removeImage(runRIGHT);
+//            addImage(runLEFT);
+//            this.currentImage = runLEFT;
+//        } else {
+//            removeImage(runLEFT);
+//            addImage(runRIGHT);
+//            this.currentImage = runRIGHT;
+//        }
+//
+//    }
 
     /**
      * Checks if the current facing direction is blocked or not. Currently not blocked for ladders but
@@ -285,7 +362,7 @@ class Runner extends Entity {
             if (guardIsRight(guards.get(i))) {
                 if(!pump.playing()) { pump.play(0.6f, 0.1f); }
                 removeImage(currentImage);
-                addImage(runPumpingR);
+                setAnimation("RIGHT", tazingRight);
                 this.tazing = "RIGHT";
 //                System.out.println("PUMPED RIGHT!!");
                 guards.get(i).tazed(delta);
@@ -293,7 +370,7 @@ class Runner extends Entity {
             } else if (guardIsLeft(guards.get(i))) {
                 if(!pump.playing()) { pump.play(0.6f,0.1f); }
                 removeImage(currentImage);
-                addImage(runPumpingL);
+                setAnimation("LEFT", tazingLeft);
                 this.tazing = "LEFT";
 //                System.out.println("PUMPED LEFT!!");
                 guards.get(i).tazed(delta);
@@ -302,67 +379,68 @@ class Runner extends Entity {
             }
         }
     }
-    public void restoreImage() {
-        if(direction == "RIGHT") addImage(runRIGHT);
-        else addImage(runLEFT);
-        tazing = null;
-    }
-    public void removeTazing() {
-        if(tazing == "RIGHT")
-            removeImage(runPumpingR);
-        else
-            removeImage(runPumpingL);
-    }
-    private void setRopeImage() {
-        if(climbing) {
-
-            removeImage(currentImage);
-            currentImage = null;
-
-            if(getDirection() == "RIGHT") {
-                if(currentImage != climbR) {
-                    removeImage(climbL);
-                    addImage(climbR);
-                    currentImage = climbR;
-                }
-
-            }
-            else if(getDirection() == "LEFT") {
-                if(currentImage != climbL) {
-                    removeImage(climbR);
-                    addImage(climbL);
-                    currentImage = climbL;
-                }
-            }
-
-        }
-    }
-    private void restoreFromClimbing() {
-        if(currentImage != runLEFT && currentImage != runRIGHT) {
-            removeImage(climbL);
-            removeImage(climbR);
-            if(getDirection() == "RIGHT") {
-                addImage(runRIGHT);
-                currentImage = runRIGHT;
-            }
-            else if(getDirection() == "LEFT"){
-                addImage(runLEFT);
-                currentImage = runLEFT;
-            }
-        }
-
-    }
+//    public void restoreImage() {
+//        if(direction == "RIGHT") addImage(runRIGHT);
+//        else addImage(runLEFT);
+//        tazing = null;
+//    }
+//    public void removeTazing() {
+//        if(tazing == "RIGHT")
+//            removeImage(runPumpingR);
+//        else
+//            removeImage(runPumpingL);
+//    }
+//    private void setRopeImage() {
+//        if(climbing) {
+//
+//            removeImage(currentImage);
+//            currentImage = null;
+//
+//            if(getDirection() == "RIGHT") {
+//                if(currentImage != climbR) {
+//                    removeImage(climbL);
+//                    addImage(climbR);
+//                    currentImage = climbR;
+//                }
+//
+//            }
+//            else if(getDirection() == "LEFT") {
+//                if(currentImage != climbL) {
+//                    removeImage(climbR);
+//                    addImage(climbL);
+//                    currentImage = climbL;
+//                }
+//            }
+//
+//        }
+//    }
+//    private void restoreFromClimbing() {
+//        if(currentImage != runLEFT && currentImage != runRIGHT) {
+//            removeImage(climbL);
+//            removeImage(climbR);
+//            if(getDirection() == "RIGHT") {
+//                addImage(runRIGHT);
+//                currentImage = runRIGHT;
+//            }
+//            else if(getDirection() == "LEFT"){
+//                addImage(runLEFT);
+//                currentImage = runLEFT;
+//            }
+//        }
+//
+//    }
 
     /**
      * @param delta the number of milliseconds since the last update
      */
     public void update(final int delta, int[][] Tmap) {
-        if(isClimbing(Tmap)) {
-            setRopeImage();
-        }
-        else if(!isClimbing(Tmap) ) {
-            restoreFromClimbing();
-        }
+        currentAnimation.update(delta);
+//        if(isClimbing(Tmap)) {
+//            setRopeImage();
+//        }
+//        else if(!isClimbing(Tmap) ) {
+//            restoreFromClimbing();
+//        }
 //        System.out.println("CURRENT IMAGE: "+ currentImage.getName());
         if (this.timer <= 0) {
             translate(velocity.scale(delta));

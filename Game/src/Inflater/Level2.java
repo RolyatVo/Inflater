@@ -169,10 +169,10 @@ class Level2 extends BasicGameState {
 
         Input input = container.getInput();
         InflaterGame ig = (InflaterGame) game;
-        if (ig.runner.tazing != null) {
-            ig.runner.removeTazing();
-            ig.runner.restoreImage();
-        }
+//        if (ig.runner.tazing != null) {
+//            ig.runner.removeTazing();
+//            ig.runner.restoreImage();
+//        }
         if (input.isKeyDown(Input.KEY_SPACE)) {
             ig.runner.setVelocity(new Vector(0, 0));
             ig.runner.pumpDirection(ig.guards, delta);
