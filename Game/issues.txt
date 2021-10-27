@@ -13,7 +13,7 @@
 [12] Add sounds for movement and others
 [13] Implement lives system
 [14] Create start and end screen
+[15] Add animations for movement
 
   ====  [] Open Issues []  ====
-
-[15] Add animations for movement
+  

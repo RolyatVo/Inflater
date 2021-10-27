@@ -38,10 +38,10 @@ class Level2 extends BasicGameState {
     private AStar pathMap;
     private List<Node> path;
     private boolean DEBUG_FLAG = false;
-    private int [] spawnPoint = new int[2];
+    private int[] spawnPoint = new int[2];
     private int numGuard;
-    private int guardTimer =0;
-    private Sound pop;
+    private int guardTimer = 0;
+    private Sound pop, gameSound;
 
     @Override
     public void init(GameContainer container, StateBasedGame game)
@@ -49,6 +49,7 @@ class Level2 extends BasicGameState {
         InflaterGame ig = (InflaterGame) game;
         spawnPoint[0] = 19;
         spawnPoint[1] = 2;
+        gameSound = new Sound("Game/src/Inflater/Resources/sounds/265308__volvion__8-bit-bossfight.wav");
         pop = new Sound("Game/src/Inflater/Resources/sounds/260614__kwahmah-02__pop.wav");
         pathMarker = new Image("Game/src/Inflater/Resources/Sprites/pathmarker.png");
         map = new TiledMap("Game/src/Inflater/Resources/Maps/Level2/Level2.tmx");
@@ -57,7 +58,7 @@ class Level2 extends BasicGameState {
         for (int y = 0; y < tHeight; y++) {
             for (int x = 0; x < tWidth; x++) {
                 if (map.getTileId(x, y, walls) == 73 ||
-                    map.getTileId(x,y,walls) == 108)
+                        map.getTileId(x, y, walls) == 108)
                     Tmap[y][x] = 71;
                 else
                     Tmap[y][x] = map.getTileId(x, y, walls);
@@ -67,27 +68,27 @@ class Level2 extends BasicGameState {
 
 
     @Override
-    public void enter(GameContainer container, StateBasedGame game) throws SlickException{
+    public void enter(GameContainer container, StateBasedGame game) throws SlickException {
         InflaterGame ig = (InflaterGame) game;
         //Printing out 2d array of map
-        for (int y = 0; y < tHeight; y++) {
-            //System.out.println("LAYER: " + y);
-            for (int x = 0; x < tWidth; x++) {
-                System.out.printf("%4d", Tmap[y][x]);
-            }
-            System.out.println();
-        }
+//        for (int y = 0; y < tHeight; y++) {
+//            //System.out.println("LAYER: " + y);
+//            for (int x = 0; x < tWidth; x++) {
+//                System.out.printf("%4d", Tmap[y][x]);
+//            }
+//            System.out.println();
+//        }
         //reset game
         ig.hearts.clear();
         ig.coins.clear();
         ig.guards.clear();
         ig.door = null;
-        ig.runner.reset(2,14);
+        ig.runner.reset(2, 14);
 
         container.setSoundOn(true);
 
         ig.coins.add(new Coin(middle(2), middle(3)));
-        ig.coins.add(new Coin( middle(2), middle(6)));
+        ig.coins.add(new Coin(middle(2), middle(6)));
         ig.coins.add(new Coin(middle(2), middle(11)));
         ig.coins.add(new Coin(middle(19), middle(2)));
         ig.coins.add(new Coin(middle(19), middle(5)));
@@ -96,12 +97,12 @@ class Level2 extends BasicGameState {
 
         ig.door = new Door(middle(19), middle(14));
 
-        ig.guards.add(new Guard(middle(14),middle(3)));
-        ig.guards.add(new Guard(middle(4),middle(6)));
+        ig.guards.add(new Guard(middle(14), middle(3)));
+        ig.guards.add(new Guard(middle(4), middle(6)));
         numGuard = ig.guards.size();
-        ig.hearts.add(new heart(1 * 64-32, 16*64-32));
-        ig.hearts.add(new heart(2 * 64-32, 16*64-32));
-        ig.hearts.add(new heart(3 * 64-32, 16*64-32));
+        ig.hearts.add(new heart(1 * 64 - 32, 16 * 64 - 32));
+        ig.hearts.add(new heart(2 * 64 - 32, 16 * 64 - 32));
+        ig.hearts.add(new heart(3 * 64 - 32, 16 * 64 - 32));
 
 
     }
@@ -119,14 +120,14 @@ class Level2 extends BasicGameState {
             for (int i = 1; i < tHeight; i++)
                 g.drawLine(0, map.getTileHeight() * i, pWidth, map.getTileHeight() * i);
 
-            for(int i =0; i< ig.guards.size(); i++) {
-                if(ig.guards.get(i).getPath() != null)
+            for (int i = 0; i < ig.guards.size(); i++) {
+                if (ig.guards.get(i).getPath() != null)
                     ig.guards.get(i).getPath().forEach(node -> g.drawImage(pathMarker, node.getX() * 64, node.getY() * 64));
             }
 
         }
         ig.coins.forEach(coin -> coin.render(g));
-        if(ig.guards != null) {
+        if (ig.guards != null) {
             for (Guard guard : ig.guards) {
                 guard.render(g);
                 guard.setScale(4.0f);
@@ -145,21 +146,27 @@ class Level2 extends BasicGameState {
 //        g.drawString("AIRBORNE: " + ig.runner.airborne(Tmap), 100, 140);
 
     }
-    private float middle(int a) { return a * 64 -32; }
+
+    private float middle(int a) {
+        return a * 64 - 32;
+    }
+
     private void checkGuardsTimer(ArrayList<Guard> guards) {
-        for(int i =0; i < guards.size(); i++ ) {
-            if(guards.get(i).explodetimer > 1000) {
+        for (int i = 0; i < guards.size(); i++) {
+            if (guards.get(i).explodetimer > 1000) {
                 guards.remove(i);
                 pop.play();
             }
         }
     }
-    private void reset(ArrayList<Guard> guards) throws SlickException{
+
+    private void reset(ArrayList<Guard> guards) throws SlickException {
         guards.clear();
-        guards.add(new Guard(middle(11),middle(3)));
-        guards.add(new Guard(middle(4),middle(6)));
+        guards.add(new Guard(middle(11), middle(3)));
+        guards.add(new Guard(middle(4), middle(6)));
     }
-    private void spawnGuard(ArrayList<Guard> guards) throws SlickException{
+
+    private void spawnGuard(ArrayList<Guard> guards) throws SlickException {
         guards.add(new Guard(spawnPoint[0] * 64 - 32, spawnPoint[1] * 64 - 32));
     }
 
@@ -169,16 +176,19 @@ class Level2 extends BasicGameState {
 
         Input input = container.getInput();
         InflaterGame ig = (InflaterGame) game;
-        if (ig.runner.tazing != null) {
-            ig.runner.removeTazing();
-            ig.runner.restoreImage();
-        }
+//        if (ig.runner.tazing != null) {
+//            ig.runner.removeTazing();
+//            ig.runner.restoreImage();
+//        }
+        if (!gameSound.playing())
+            gameSound.play(1, 0.05f);
+
         if (input.isKeyDown(Input.KEY_SPACE)) {
             ig.runner.setVelocity(new Vector(0, 0));
             ig.runner.pumpDirection(ig.guards, delta);
             checkGuardsTimer(ig.guards);
         } else {
-            ig.guards.forEach(guard -> guard.explodetimer =0);
+            ig.guards.forEach(guard -> guard.explodetimer = 0);
             ig.runner.move(input, Tmap);
         }
         for (int i = 0; i < ig.coins.size(); i++) {
@@ -186,17 +196,17 @@ class Level2 extends BasicGameState {
                 ig.coins.remove(i);
             }
         }
-        for(int i =0; i < ig.guards.size(); i++) {
-            if(ig.guards.get(i).collides(ig.runner)!= null && !ig.guards.get(i).tazed) {
-                ig.hearts.remove(ig.hearts.size()-1);
-                ig.runner.reset(2,14);
+        for (int i = 0; i < ig.guards.size(); i++) {
+            if (ig.guards.get(i).collides(ig.runner) != null && !ig.guards.get(i).tazed) {
+                ig.hearts.remove(ig.hearts.size() - 1);
+                ig.runner.reset(2, 14);
                 reset(ig.guards);
             }
         }
 
 
-        if(ig.guards.size() < numGuard) {
-            if(guardTimer > 3000) {
+        if (ig.guards.size() < numGuard) {
+            if (guardTimer > 3000) {
                 spawnGuard(ig.guards);
                 guardTimer = 0;
             }
@@ -205,14 +215,15 @@ class Level2 extends BasicGameState {
 
         if (input.isKeyPressed(Input.KEY_P))
             DEBUG_FLAG = !DEBUG_FLAG;
-        if(input.isKeyPressed(Input.KEY_C))
+        if (input.isKeyPressed(Input.KEY_C))
             ig.coins.clear();
         //Aft
-        if ( (ig.door != null && ig.coins != null) && ig.door.collides(ig.runner) != null && ig.coins.isEmpty()) {
+        if ((ig.door != null && ig.coins != null) && ig.door.collides(ig.runner) != null && ig.coins.isEmpty()) {
             System.out.println("GO TO NEXT LEVEL!");
+            gameSound.stop();
             ig.enterState(InflaterGame.WINSTATE, new EmptyTransition(), new HorizontalSplitTransition());
         }
-        if(ig.hearts.isEmpty()) {
+        if (ig.hearts.isEmpty()) {
             ig.enterState(InflaterGame.GAMEOVERSTATE);
         }
         ig.runner.update(delta, Tmap);

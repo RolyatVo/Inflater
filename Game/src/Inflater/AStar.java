@@ -15,7 +15,7 @@ public class AStar {
         for (int y = 0; y < 15; y++) {
             for (int x = 0; x < 20; x++) {
 
-                if (((y +1 < 15) &&(map[y][x] == 0 && map[y+1][x] != 0 && map[y+1][x] != 139 )) || map[y][x] == 71 || map[y][x] == 139) {
+                if (((y +1 < 15) &&(map[y][x] == 0 && map[y+1][x] != 0 && map[y+1][x] != 139 && map[y+1][x] != 186 )) || map[y][x] == 71 || map[y][x] == 139 || map[y][x] == 186) {
                     pathMap[y][x] = new Node(x, y);
                     pathMap[y][x].setWalkable(true);
                 } else {
@@ -69,7 +69,8 @@ public class AStar {
     public List<Node> randomPath(int startX, int startY, int destX, int destY) {
         if(startX < 0 || startX > 19 || startY < 0 || startY > 14) { return null; }
         Node start = pathMap[startY][startX];
-        Node dest = getRandomNode(destX, destY);
+       // Node dest = getRandomNode(destX, destY);
+        Node dest = pathMap[14][2];
 
         PriorityQueue<Node> open = new PriorityQueue<>();
         List<Node> closed = new ArrayList<>();
