@@ -235,7 +235,7 @@ class Guard extends Entity {
 
             if (!tazed) {
                 setVelocity(getNextInPath(Tmap));
-                translate(velocity.scale(!this.scared ? delta : delta * 0.7f));
+                translate(velocity.scale(!this.scared ? delta : delta * 0.5f));
             } else {
                 setVelocity(new Vector(0, 0));
             }

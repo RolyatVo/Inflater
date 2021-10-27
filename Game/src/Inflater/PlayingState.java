@@ -44,7 +44,7 @@ class PlayingState extends BasicGameState {
             throws SlickException {
         InflaterGame ig = (InflaterGame) game;
         spawnPoint[0] = 2;
-        spawnPoint[1] = 7;
+        spawnPoint[1] = 3;
         gameSound = new Sound("Game/src/Inflater/Resources/sounds/265308__volvion__8-bit-bossfight.wav");
         map = new TiledMap("Game/src/Inflater/Resources/Maps/Level1/Level1.tmx");
         pop = new Sound("Game/src/Inflater/Resources/sounds/260614__kwahmah-02__pop.wav");
@@ -79,6 +79,7 @@ class PlayingState extends BasicGameState {
 //        }
         ig.coins.add(new Coin(2 * 64 - 32, 7 * 64 - 32));
         ig.coins.add(new Coin(15 * 64 - 32, 10 * 64 - 32));
+        ig.coins.add(new Coin(19*64-32, 4* 64-32));
 
         ig.door = new Door(10 * 64 - 32, 14 * 64 - 32);
         ig.guards.add(new Guard(19 * 64 - 32, 7 * 64 - 32));
