@@ -148,9 +148,13 @@ class Runner extends Entity {
                 rope.play(2, 0.5f);
             }
             if (getDirection() != "RIGHT") {
-//                flipDirection();
+                flipDirection();
             }
             if (isDirectionBlocked(Tmap)) {
+                if(currentAnimation != null) {
+                    currentAnimation.stop();
+                    currentAnimation.setCurrentFrame(1);
+                }
                 setVelocity(new Vector(0, 0));
             } else {
                 setAnimationDirection("RIGHT", Tmap);
@@ -164,9 +168,13 @@ class Runner extends Entity {
                 rope.play(2, 0.5f);
             }
             if (getDirection() != "LEFT") {
-//                flipDirection();
+               flipDirection();
             }
             if (isDirectionBlocked(Tmap)) {
+                if(currentAnimation != null) {
+                    currentAnimation.stop();
+                    currentAnimation.setCurrentFrame(1);
+                }
                 setVelocity(new Vector(0, 0));
             } else {
                 setAnimationDirection("LEFT", Tmap);
@@ -228,14 +236,13 @@ class Runner extends Entity {
     /**
      * Flip and set the direction of the player.
      */
-//    public void flipDirection() {
-//        flipImage();
-//        if (direction == "RIGHT") {
-//            setDirection("LEFT");
-//        } else {
-//            setDirection("RIGHT");
-//        }
-//    }
+    public void flipDirection() {
+        if (direction == "RIGHT") {
+            setDirection("LEFT");
+        } else {
+            setDirection("RIGHT");
+        }
+    }
 
     /**
      * Flip image of the player depending on which way they are facing.

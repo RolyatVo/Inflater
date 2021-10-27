@@ -142,6 +142,8 @@ class Guard extends Entity {
             return this.velocity;
 
         } else {
+            currentAnimation.stop();
+            currentAnimation.setCurrentFrame(1);
             return new Vector(0, 0);
         }
     }
@@ -216,7 +218,8 @@ class Guard extends Entity {
 //                pathMap.printPathMap();
 //                System.out.println(" ");
                 if (!this.scared) {
-                    List<Node> currentPath = scared ? pathMap.randomPath((int) (this.getX() / 64), (int) (this.getX() / 64), runnerX, runnerY) : pathMap.aStarSearch(getTileX(), getTileY(), runnerX, runnerY);
+                    //List<Node> currentPath = scared ? pathMap.randomPath((int) (this.getX() / 64), (int) (this.getX() / 64), runnerX, runnerY) : pathMap.aStarSearch(getTileX(), getTileY(), runnerX, runnerY);
+                    List<Node> currentPath = pathMap.aStarSearch(getTileX(), getTileY(), runnerX, runnerY);
                     setPath(currentPath);
                 }
 

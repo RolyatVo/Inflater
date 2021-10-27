@@ -41,7 +41,7 @@ class Level2 extends BasicGameState {
     private int[] spawnPoint = new int[2];
     private int numGuard;
     private int guardTimer = 0;
-    private Sound pop;
+    private Sound pop, gameSound;
 
     @Override
     public void init(GameContainer container, StateBasedGame game)
@@ -49,6 +49,7 @@ class Level2 extends BasicGameState {
         InflaterGame ig = (InflaterGame) game;
         spawnPoint[0] = 19;
         spawnPoint[1] = 2;
+        gameSound = new Sound("Game/src/Inflater/Resources/sounds/265308__volvion__8-bit-bossfight.wav");
         pop = new Sound("Game/src/Inflater/Resources/sounds/260614__kwahmah-02__pop.wav");
         pathMarker = new Image("Game/src/Inflater/Resources/Sprites/pathmarker.png");
         map = new TiledMap("Game/src/Inflater/Resources/Maps/Level2/Level2.tmx");
@@ -70,13 +71,13 @@ class Level2 extends BasicGameState {
     public void enter(GameContainer container, StateBasedGame game) throws SlickException {
         InflaterGame ig = (InflaterGame) game;
         //Printing out 2d array of map
-        for (int y = 0; y < tHeight; y++) {
-            //System.out.println("LAYER: " + y);
-            for (int x = 0; x < tWidth; x++) {
-                System.out.printf("%4d", Tmap[y][x]);
-            }
-            System.out.println();
-        }
+//        for (int y = 0; y < tHeight; y++) {
+//            //System.out.println("LAYER: " + y);
+//            for (int x = 0; x < tWidth; x++) {
+//                System.out.printf("%4d", Tmap[y][x]);
+//            }
+//            System.out.println();
+//        }
         //reset game
         ig.hearts.clear();
         ig.coins.clear();
@@ -179,6 +180,9 @@ class Level2 extends BasicGameState {
 //            ig.runner.removeTazing();
 //            ig.runner.restoreImage();
 //        }
+        if (!gameSound.playing())
+            gameSound.play(1, 0.05f);
+
         if (input.isKeyDown(Input.KEY_SPACE)) {
             ig.runner.setVelocity(new Vector(0, 0));
             ig.runner.pumpDirection(ig.guards, delta);
@@ -216,6 +220,7 @@ class Level2 extends BasicGameState {
         //Aft
         if ((ig.door != null && ig.coins != null) && ig.door.collides(ig.runner) != null && ig.coins.isEmpty()) {
             System.out.println("GO TO NEXT LEVEL!");
+            gameSound.stop();
             ig.enterState(InflaterGame.WINSTATE, new EmptyTransition(), new HorizontalSplitTransition());
         }
         if (ig.hearts.isEmpty()) {

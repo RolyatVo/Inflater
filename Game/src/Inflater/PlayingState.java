@@ -124,9 +124,10 @@ class PlayingState extends BasicGameState {
 
         ig.hearts.forEach(heart -> heart.render(g));
 
-
-//        g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
-//        g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 120);
+        if(DEBUG_FLAG) {
+            g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
+            g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 120);
+        }
     }
 
     private void checkGuardsTimer(ArrayList<Guard> guards) {
@@ -198,6 +199,7 @@ class PlayingState extends BasicGameState {
         if (((ig.door != null && ig.coins != null) && ig.door.collides(ig.runner) != null && ig.coins.isEmpty())
                 || input.isKeyPressed(Input.KEY_2)) {
             System.out.println("GO TO NEXT LEVEL!");
+            gameSound.stop();
             ig.enterState(InflaterGame.LEVEL2, new EmptyTransition(), new SelectTransition());
         }
         if (ig.hearts.isEmpty()) {
