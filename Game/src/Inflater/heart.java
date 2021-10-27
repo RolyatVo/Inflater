@@ -2,11 +2,9 @@ package Inflater;
 
 import jig.Entity;
 import jig.ResourceManager;
-import jig.Vector;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.Animation;
 
 /**
  * The Ball class is an Entity that has a velocity (since it's moving). When
@@ -18,8 +16,11 @@ class heart extends Entity {
 
     public heart(final float x, final float y) throws SlickException {
         super(x, y);
-        addImageWithBoundingBox(ResourceManager
-                .getImage(InflaterGame.HEART_RSC));
+        Image[] heart = new Image[2];
+        heart[0] = ResourceManager.getImage(InflaterGame.HEART1_RSC);
+        heart[1] = ResourceManager.getImage(InflaterGame.HEART2_RSC);
+        Animation beatHeart = new Animation(heart, 400, true);
+        addAnimation(beatHeart);
     }
 
 

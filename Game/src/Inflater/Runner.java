@@ -15,7 +15,7 @@ class Runner extends Entity {
     private final Sound pump = new Sound("Game/src/Inflater/Resources/sounds/459145__matrixxx__retro-pew-shot.wav");
     private final Image runLEFT;
     //private final Image runRIGHT = runLEFT.getFlippedCopy(true, false);
-   // private final Image runPumpingL = runguy.getSubImage(0, 32, 16, 16);
+    // private final Image runPumpingL = runguy.getSubImage(0, 32, 16, 16);
     //private final Image runPumpingR = runPumpingL.getFlippedCopy(true, false);
     //private final Image climbL = runguy.getSubImage(4 * 16, 16, 16, 16);
     //private final Image climbR = climbL.getFlippedCopy(true,false);
@@ -48,24 +48,25 @@ class Runner extends Entity {
         direction = "LEFT";
         timer = 0;
 
-        walkingLeft = new Animation(runguy, 0,0, 3,0, true, 300, true);
+        walkingLeft = new Animation(runguy, 0, 0, 3, 0, true, 300, true);
         walkingRight = flippedAnimation(walkingLeft);
 
-        climbingLadder = new Animation(runguy, 0,1,3,1, true, 300, true);
-        ropeLeft = new Animation(runguy, 4,1,7,1, true, 300, true);
+        climbingLadder = new Animation(runguy, 0, 1, 3, 1, true, 250, true);
+        ropeLeft = new Animation(runguy, 4, 1, 7, 1, true, 250, true);
         ropeRight = flippedAnimation(ropeLeft);
 
-        tazingLeft = new Animation(runguy,0,2,1,2,true,400,true);
+        tazingLeft = new Animation(runguy, 0, 2, 1, 2, true, 400, true);
         tazingRight = flippedAnimation(tazingLeft);
 
     }
+
     private Animation flippedAnimation(Animation animation) {
         Image[] reversed = new Image[animation.getFrameCount()];
 
-        for(int i=0; i < animation.getFrameCount(); i++) {
-            reversed[i] = animation.getImage(i).getFlippedCopy(true,false);
+        for (int i = 0; i < animation.getFrameCount(); i++) {
+            reversed[i] = animation.getImage(i).getFlippedCopy(true, false);
         }
-        return new Animation(reversed,300,true);
+        return new Animation(reversed, 300, true);
     }
 
     public void setVelocity(final Vector v) {
@@ -92,9 +93,10 @@ class Runner extends Entity {
     public void setDirection(String direction) {
         this.direction = direction;
     }
+
     public void reset(int x, int y) {
-        this.setX(x*64-32);
-        this.setY(y*64-32);
+        this.setX(x * 64 - 32);
+        this.setY(y * 64 - 32);
     }
 
     /**
@@ -126,22 +128,25 @@ class Runner extends Entity {
      */
     public void move(Input input, int[][] Tmap) {
         float PLAYER_SPEED = 0.20f;
-        if (input.isKeyDown(Input.KEY_DOWN) && !isOnFloorLadder(Tmap) && ( isOnLadder(Tmap) || isOnRope(Tmap) )&& getCoarseGrainedMaxY() < 14 * 64) {
-            if(isOnLadder(Tmap) && !climbingSound.playing()) {
+        if (input.isKeyDown(Input.KEY_DOWN) && !isOnFloorLadder(Tmap) && (isOnLadder(Tmap) || isOnRope(Tmap)) && getCoarseGrainedMaxY() < 14 * 64) {
+            if (isOnLadder(Tmap) && !climbingSound.playing()) {
                 climbingSound.play(1f, 0.2f);
             }
             setAnimation(direction, climbingLadder);
             setVelocity(new Vector(0, PLAYER_SPEED));
-        }
-        else if (input.isKeyDown(Input.KEY_UP) && isOnLadder(Tmap)) {
-            if(isOnLadder(Tmap) && !climbingSound.playing()) { climbingSound.play(2,0.2f);}
+        } else if (input.isKeyDown(Input.KEY_UP) && isOnLadder(Tmap)) {
+            if (isOnLadder(Tmap) && !climbingSound.playing()) {
+                climbingSound.play(2, 0.2f);
+            }
             setAnimation(direction, climbingLadder);
             setVelocity(new Vector(0, -PLAYER_SPEED));
         } else if (input.isKeyDown(Input.KEY_RIGHT)) {
-            if(!walking.playing() && !climbing && !isOnLadder(Tmap))
-                walking.play(2,0.5f);
+            if (!walking.playing() && !climbing && !isOnLadder(Tmap))
+                walking.play(2, 0.5f);
 
-            if(isClimbing(Tmap) && !rope.playing()) { rope.play(2,0.5f); }
+            if (isClimbing(Tmap) && !rope.playing()) {
+                rope.play(2, 0.5f);
+            }
             if (getDirection() != "RIGHT") {
 //                flipDirection();
             }
@@ -153,9 +158,11 @@ class Runner extends Entity {
             }
 
         } else if (input.isKeyDown(Input.KEY_LEFT)) {
-            if(!walking.playing() && !climbing && !isOnLadder(Tmap))
-                walking.play(2,0.5f);
-            if(isClimbing(Tmap) && !rope.playing()) { rope.play(2,0.5f); }
+            if (!walking.playing() && !climbing && !isOnLadder(Tmap))
+                walking.play(2, 0.5f);
+            if (isClimbing(Tmap) && !rope.playing()) {
+                rope.play(2, 0.5f);
+            }
             if (getDirection() != "LEFT") {
 //                flipDirection();
             }
@@ -166,14 +173,16 @@ class Runner extends Entity {
                 setVelocity(new Vector(-PLAYER_SPEED, 0));
             }
         } else {
-            currentAnimation.stop();
-            currentAnimation.setCurrentFrame(1);
+            if(currentAnimation != null) {
+                currentAnimation.stop();
+                currentAnimation.setCurrentFrame(1);
+            }
             setVelocity(new Vector(0, 0));
         }
 
         //Check if the player is in the air, if so apply gravity
         float GRAVITY = 0.25f;
-        if (!isClimbing(Tmap) && airborne(Tmap) )
+        if (!isClimbing(Tmap) && airborne(Tmap))
             setVelocity(new Vector(this.velocity.getX(), this.velocity.getY() + GRAVITY));
     }
 
@@ -188,30 +197,27 @@ class Runner extends Entity {
     }
 
 
-    private void setAnimationDirection(String direction, int [][] Tmap) {
+    private void setAnimationDirection(String direction, int[][] Tmap) {
         this.direction = direction;
         removeImage(currentImage);
         removeAnimation(currentAnimation);
 
-        if(direction == "RIGHT") {
-            if(isClimbing(Tmap)) {
+        if (direction == "RIGHT") {
+            if (isClimbing(Tmap)) {
                 addAnimation(ropeRight);
                 currentAnimation = ropeRight;
                 ropeRight.start();
-            }
-            else {
+            } else {
                 addAnimation(walkingRight);
                 currentAnimation = walkingRight;
                 walkingRight.start();
             }
-        }
-        else {
-            if(isClimbing(Tmap)) {
+        } else {
+            if (isClimbing(Tmap)) {
                 addAnimation(ropeLeft);
                 currentAnimation = ropeLeft;
                 ropeLeft.start();
-            }
-            else {
+            } else {
                 addAnimation(walkingLeft);
                 currentAnimation = walkingLeft;
                 walkingLeft.start();
@@ -261,15 +267,15 @@ class Runner extends Entity {
 
         if (getDirection().compareTo("RIGHT") == 0) {
             if ((tmap[(int) ((y) / 64)][(int) ((x - 32) / 64f) + 1] != 0
-                    && tmap[(int) ((y+28f) / 64)][(int) ((x + 32) / 64f) - 1] != 0)
+                    && tmap[(int) ((y + 28f) / 64)][(int) ((x + 32) / 64f) - 1] != 0)
                     && tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 71
-                    &&tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 139
+                    && tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 139
                     && tmap[(int) (y / 64)][(int) ((x - 32) / 64f) + 1] != 186)
                 return true;
         }
         if (getDirection().compareTo("LEFT") == 0) {
             if (tmap[(int) ((y) / 64)][(int) ((x + 32) / 64f) - 1] != 0
-                    && tmap[(int) ((y+28f) / 64)][(int) ((x + 32) / 64f) - 1] != 0
+                    && tmap[(int) ((y + 28f) / 64)][(int) ((x + 32) / 64f) - 1] != 0
                     && tmap[(int) (y / 64)][(int) ((x + 32) / 64f) - 1] != 71
                     && tmap[(int) (y / 64)][(int) ((x + 32) / 64f) - 1] != 139
                     && tmap[(int) (y / 64)][(int) ((x + 32) / 64f) - 1] != 186)
@@ -277,16 +283,18 @@ class Runner extends Entity {
         }
         return false;
     }
+
     public boolean isOnRope(int[][] tmap) {
         int playerY = (int) getTilePosition(64, 64).getY();
         int playerX = (int) getTilePosition(64, 64).getX();
         if (tmap[playerY][playerX] == 186 || tmap[playerY][playerX] == 139
-            || tmap[playerY+1][playerX] == 186 || tmap[playerY+1][playerX] == 139) {
+                || tmap[playerY + 1][playerX] == 186 || tmap[playerY + 1][playerX] == 139) {
             return true;
         }
         return false;
     }
-    public boolean isClimbing(int [][] tmap) {
+
+    public boolean isClimbing(int[][] tmap) {
         int playerY = (int) getTilePosition(64, 64).getY();
         int playerX = (int) getTilePosition(64, 64).getX();
         if (tmap[playerY][playerX] == 186 || tmap[playerY][playerX] == 139) {
@@ -313,13 +321,14 @@ class Runner extends Entity {
         }
         return false;
     }
-    public boolean isOnFloorLadder(int [][] tmap) {
+
+    public boolean isOnFloorLadder(int[][] tmap) {
         int pX, pY;
         pX = (int) getX() / 64;
-        pY = (int) ((getY()-30) / 64);
+        pY = (int) ((getY() - 30) / 64);
 
         return (tmap[pY][pX] != 71 && tmap[pY][pX] != 0 && tmap[pY][pX] != 186 && tmap[pY][pX] != 139)
-                || (tmap[pY + 1][pX] != 0 && tmap[pY + 1][pX] != 71 && tmap[pY + 1][pX] != 73 && tmap[pY+1][pX] != 186 && tmap[pY+1][pX] != 139);
+                || (tmap[pY + 1][pX] != 0 && tmap[pY + 1][pX] != 71 && tmap[pY + 1][pX] != 73 && tmap[pY + 1][pX] != 186 && tmap[pY + 1][pX] != 139);
     }
 
     /**
@@ -360,7 +369,9 @@ class Runner extends Entity {
         //TODO: Implement taze functionality into pumpDirection change the image when the player pumps
         for (int i = 0; i < guards.size(); i++) {
             if (guardIsRight(guards.get(i))) {
-                if(!pump.playing()) { pump.play(0.6f, 0.1f); }
+                if (!pump.playing()) {
+                    pump.play(0.6f, 0.1f);
+                }
                 removeImage(currentImage);
                 setAnimation("RIGHT", tazingRight);
                 this.tazing = "RIGHT";
@@ -368,7 +379,9 @@ class Runner extends Entity {
                 guards.get(i).tazed(delta);
                 break;
             } else if (guardIsLeft(guards.get(i))) {
-                if(!pump.playing()) { pump.play(0.6f,0.1f); }
+                if (!pump.playing()) {
+                    pump.play(0.6f, 0.1f);
+                }
                 removeImage(currentImage);
                 setAnimation("LEFT", tazingLeft);
                 this.tazing = "LEFT";
@@ -434,7 +447,7 @@ class Runner extends Entity {
      * @param delta the number of milliseconds since the last update
      */
     public void update(final int delta, int[][] Tmap) {
-        currentAnimation.update(delta);
+        if(currentAnimation != null) currentAnimation.update(delta);
 //        if(isClimbing(Tmap)) {
 //            setRopeImage();
 //        }

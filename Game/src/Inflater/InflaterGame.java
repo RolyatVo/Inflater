@@ -12,24 +12,26 @@ import java.util.ArrayList;
 
 /**
  * === Credits ===
- *
+ * <p>
  * Sprite Pack
  * Author: yd
  * https://opengameart.org/content/platformer-sprites
- *
+ * <p>
  * coins
  * https://opengameart.org/content/coin-animation
- *
+ * <p>
  * level2
  * https://opengameart.org/content/2d-castle-platformer-starter-assets
- *
+ * <p>
  * https://freesound.org/people/kwahmah_02/sounds/260614/
  * https://freesound.org/people/MATRIXXX_/sounds/459145/
  * https://freesound.org/people/jeckkech/sounds/391666/
  * https://freesound.org/people/InspectorJ/sounds/394430/
  * https://freesound.org/people/Volvion/sounds/265308/
  * https://freesound.org/people/Samulis/sounds/197780/
+ * https://opengameart.org/content/coins-asset
  *
+ * https://temok.itch.io/heart-container-animated-in-pixel-art
  */
 public class InflaterGame extends StateBasedGame {
 
@@ -46,6 +48,9 @@ public class InflaterGame extends StateBasedGame {
     public static final String HEART_RSC = "Inflater/Resources/Sprites/heart.png";
     public static final String LODERUNNER_RSC = "Inflater/Resources/Sprites/loderunner.png";
     public static final String SPINNING_COIN_RSC = "Inflater/Resources/Sprites/coin32.png";
+    public static final String HEART1_RSC = "Inflater/Resources/Sprites/Gif-1.png";
+    public static final String HEART2_RSC = "Inflater/Resources/Sprites/Gif-2.png";
+
 //    public static final String a = "";
 //    public static final String a = "";
 //    public static final String a = "";
@@ -118,8 +123,8 @@ public class InflaterGame extends StateBasedGame {
         ResourceManager.loadImage(HEART_RSC);
         ResourceManager.loadImage(LODERUNNER_RSC);
         ResourceManager.loadImage(SPINNING_COIN_RSC);
-
-
+        ResourceManager.loadImage(HEART1_RSC);
+        ResourceManager.loadImage(HEART2_RSC);
 
         runner = new Runner(2 * 64 - 32, 14 * 64 - 32, 0f, 0f);
         coins = new ArrayList<Coin>();

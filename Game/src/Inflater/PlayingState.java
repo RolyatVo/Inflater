@@ -33,9 +33,9 @@ class PlayingState extends BasicGameState {
     private final int pWidth = 1280;
     private final int[][] Tmap = new int[tHeight][tWidth];
     private boolean DEBUG_FLAG = false;
-    private int [] spawnPoint = new int[2];
+    private int[] spawnPoint = new int[2];
     private int numGuard;
-    private int guardTimer =0;
+    private int guardTimer = 0;
 
     private Sound pop;
 
@@ -61,15 +61,15 @@ class PlayingState extends BasicGameState {
     }
 
     @Override
-    public void enter(GameContainer container, StateBasedGame game) throws SlickException{
+    public void enter(GameContainer container, StateBasedGame game) throws SlickException {
         InflaterGame ig = (InflaterGame) game;
         //reset level
         ig.hearts.clear();
         ig.coins.clear();
         ig.guards.clear();
         ig.door = null;
-        ig.runner.reset(2,14);
-       // gameSound.loop(1,0.5f);
+        ig.runner.reset(2, 14);
+        // gameSound.loop(1,0.5f);
         //Printing out 2d array of map
 //        for (int y = 0; y < tHeight; y++) {
 //            for (int x = 0; x < tWidth; x++) {
@@ -82,12 +82,12 @@ class PlayingState extends BasicGameState {
 
         ig.door = new Door(10 * 64 - 32, 14 * 64 - 32);
         ig.guards.add(new Guard(19 * 64 - 32, 7 * 64 - 32));
-        ig.guards.add(new Guard(3 * 64 - 32 , 7 * 64 - 32));
+        ig.guards.add(new Guard(3 * 64 - 32, 7 * 64 - 32));
         numGuard = ig.guards.size();
 
-        ig.hearts.add(new heart(1 * 64-32, 16*64-32));
-        ig.hearts.add(new heart(2 * 64-32, 16*64-32));
-        ig.hearts.add(new heart(3 * 64-32, 16*64-32));
+        ig.hearts.add(new heart(1 * 64 - 32, 16 * 64 - 32));
+        ig.hearts.add(new heart(2 * 64 - 32, 16 * 64 - 32));
+        ig.hearts.add(new heart(3 * 64 - 32, 16 * 64 - 32));
 
 
         container.setSoundOn(true);
@@ -106,8 +106,8 @@ class PlayingState extends BasicGameState {
             for (int i = 1; i < tHeight; i++)
                 g.drawLine(0, map.getTileHeight() * i, pWidth, map.getTileHeight() * i);
 
-            for(int i =0; i< ig.guards.size(); i++) {
-                if(ig.guards.get(i).getPath() != null)
+            for (int i = 0; i < ig.guards.size(); i++) {
+                if (ig.guards.get(i).getPath() != null)
                     ig.guards.get(i).getPath().forEach(node -> g.drawImage(pathMarker, node.getX() * 64, node.getY() * 64));
             }
         }
@@ -128,29 +128,31 @@ class PlayingState extends BasicGameState {
 //        g.drawString("TILE POSITION: " + ig.runner.getTilePosition(64f, 64f).toString(), 100, 100);
 //        g.drawString("DIRECTION BLOCKED: " + ig.runner.isDirectionBlocked(Tmap), 100, 120);
     }
+
     private void checkGuardsTimer(ArrayList<Guard> guards) {
-        for(int i =0; i < guards.size(); i++ ) {
-            if(guards.get(i).explodetimer > 1000) {
+        for (int i = 0; i < guards.size(); i++) {
+            if (guards.get(i).explodetimer > 1000) {
                 pop.play();
                 guards.remove(i);
             }
         }
     }
-    private void reset(ArrayList<Guard> guards) throws SlickException{
+
+    private void reset(ArrayList<Guard> guards) throws SlickException {
         guards.clear();
         guards.add(new Guard(19 * 64 - 32, 7 * 64 - 32));
-        guards.add(new Guard(3 * 64 - 32 , 7 * 64 - 32));
+        guards.add(new Guard(3 * 64 - 32, 7 * 64 - 32));
     }
 
-    private void spawnGuard(ArrayList<Guard> guards) throws SlickException{
+    private void spawnGuard(ArrayList<Guard> guards) throws SlickException {
         guards.add(new Guard(spawnPoint[0] * 64 - 32, spawnPoint[1] * 64 - 32));
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game,
                        int delta) throws SlickException {
-        if(!gameSound.playing())
-            gameSound.play(1,0.05f);
+        if (!gameSound.playing())
+            gameSound.play(1, 0.05f);
 
         Input input = container.getInput();
         InflaterGame ig = (InflaterGame) game;
@@ -163,7 +165,7 @@ class PlayingState extends BasicGameState {
             ig.runner.pumpDirection(ig.guards, delta);
             checkGuardsTimer(ig.guards);
         } else {
-            ig.guards.forEach(guard -> guard.explodetimer =0);
+            ig.guards.forEach(guard -> guard.explodetimer = 0);
             ig.runner.move(input, Tmap);
         }
         for (int i = 0; i < ig.coins.size(); i++) {
@@ -171,17 +173,17 @@ class PlayingState extends BasicGameState {
                 ig.coins.remove(i);
             }
         }
-        for(int i =0; i < ig.guards.size(); i++) {
-            if(ig.guards.get(i).collides(ig.runner)!= null && !ig.guards.get(i).tazed) {
-                ig.hearts.remove(ig.hearts.size()-1);
-                ig.runner.reset(2,14);
+        for (int i = 0; i < ig.guards.size(); i++) {
+            if (ig.guards.get(i).collides(ig.runner) != null && !ig.guards.get(i).tazed) {
+                ig.hearts.remove(ig.hearts.size() - 1);
+                ig.runner.reset(2, 14);
                 reset(ig.guards);
             }
         }
 
 
-        if(ig.guards.size() < numGuard) {
-            if(guardTimer > 3000) {
+        if (ig.guards.size() < numGuard) {
+            if (guardTimer > 3000) {
                 spawnGuard(ig.guards);
                 guardTimer = 0;
             }
@@ -190,7 +192,7 @@ class PlayingState extends BasicGameState {
 
         if (input.isKeyPressed(Input.KEY_P))
             DEBUG_FLAG = !DEBUG_FLAG;
-        if(input.isKeyPressed(Input.KEY_C))
+        if (input.isKeyPressed(Input.KEY_C))
             ig.coins.clear();
         //Aft
         if (((ig.door != null && ig.coins != null) && ig.door.collides(ig.runner) != null && ig.coins.isEmpty())
@@ -198,7 +200,7 @@ class PlayingState extends BasicGameState {
             System.out.println("GO TO NEXT LEVEL!");
             ig.enterState(InflaterGame.LEVEL2, new EmptyTransition(), new SelectTransition());
         }
-        if(ig.hearts.isEmpty()) {
+        if (ig.hearts.isEmpty()) {
             ig.enterState(InflaterGame.GAMEOVERSTATE);
         }
         ig.runner.update(delta, Tmap);
