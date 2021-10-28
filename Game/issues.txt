@@ -1,0 +1,19 @@
+  ====  [] Closed Issues []  ====
+[1] Implement a simple collidable 2d for testing purposes.
+[2] Add a character for the player to control.
+[3] Add collision for character and the tile map.
+[4] Implement coins that spawn throughout the map
+[5] Add secret door that spawns once all coins are collected.
+[6] Enemy CPUs that spawn in map that will track and follow the player.
+ [7] Give player a weapon to destroy the CPUs, have CPUs respawn at the top.
+ [8] Adding more levels to the game.
+ [9] Add rope movement
+[10] Fix bug that allows player to climb down into ground/platforms
+[11] Add mechanic that will make the guards run away
+[12] Add sounds for movement and others
+[13] Implement lives system
+[14] Create start and end screen
+[15] Add animations for movement
+
+  ====  [] Open Issues []  ====
+  
